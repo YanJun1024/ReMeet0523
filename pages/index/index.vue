@@ -522,21 +522,16 @@ const closeUserDrawer = () => {
 const selectTag = (tag: Tag) => {
   store.setCurrentTag(tag.name)
   store.updateLastReviewed(tag.name)
-  closeAllDrawers()
-  setTimeout(() => {
-    // 点击标签 → 打开笔记抽屉，展示该标签所有笔记
-    notesDrawerOpen.value = true
-  }, 100)
+  // 不关闭标签抽屉，直接打开笔记抽屉盖在上面
+  notesDrawerOpen.value = true
 }
 
 // 从标签列表直接打开词典抽屉
 const openDictForTag = (tag: Tag) => {
   store.setCurrentTag(tag.name)
   store.updateLastReviewed(tag.name)
-  closeAllDrawers()
-  setTimeout(() => {
-    dictDrawerOpen.value = true
-  }, 100)
+  // 不关闭标签抽屉，直接打开词典抽屉盖在上面
+  dictDrawerOpen.value = true
 }
 
 // 标签触摸事件（Swipe to Reveal）
@@ -1342,9 +1337,6 @@ onLoad(() => {
 
 .drawer-tags {
   flex: 1;
-  width: 100%;
-  overflow-x: hidden;
-  overflow-y: auto;
   padding: 8px 8px 0;
 }
 
@@ -1560,8 +1552,8 @@ onLoad(() => {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: #F8F9FA;
-  z-index: 999;
+  background-color: #FFFFFF;
+  z-index: 1000;
   transform: translateX(-100%);
   transition: transform 0.3s ease;
 }
@@ -1793,8 +1785,8 @@ onLoad(() => {
   right: 0;
   width: 100%;
   height: 100%;
-  background-color: #F8F9FA;
-  z-index: 999;
+  background-color: #FFFFFF;
+  z-index: 1000;
   transform: translateX(100%);
   transition: transform 0.3s ease;
 }

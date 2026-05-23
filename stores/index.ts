@@ -77,7 +77,7 @@ export const useAppStore = defineStore('app', () => {
       }
     }
 
-    return [...learning.sort(sortFn), ...mastered.sort(sortFn)]
+    return [...learning.sort(sortFn), ...mastered]
   })
   
   const currentTagNotes = computed(() => {
@@ -105,11 +105,14 @@ export const useAppStore = defineStore('app', () => {
     }
     notes.value.unshift(newNote)
     
-    // 更新标签计数
+    // 更新标签计数，已掌握标签新增笔记 → 自动恢复为学习中
     tagNames.forEach(tagName => {
       const existingTag = tags.value.find(t => t.name === tagName)
       if (existingTag) {
         existingTag.noteCount++
+        if (existingTag.status === 'mastered') {
+          existingTag.status = 'learning'
+        }
       } else {
         tags.value.push({
           name: tagName,
