@@ -57,10 +57,15 @@
             <text class="note-text">{{ store.latestNote.content }}</text>
           </view>
           
-          <view class="note-content empty" v-else>
-            <text class="empty-icon">📖</text>
+          <view class="note-content empty" v-else-if="!store.currentTag">
+            <text class="empty-icon">🏷️</text>
             <text class="empty-text">输入一个 #英文单词</text>
-            <text class="empty-hint">写下你的想法，右滑还能查词典哦 ~</text>
+            <text class="empty-hint">写下你的想法，开始学习吧 ~</text>
+          </view>
+          <view class="note-content empty" v-else>
+            <text class="empty-icon">📝</text>
+            <text class="empty-text">#{{ store.currentTag }} 还没有笔记</text>
+            <text class="empty-hint">左滑查看笔记记录 · 右滑查看词典释义</text>
           </view>
         </view>
         </view>
@@ -692,6 +697,10 @@ const onTouchEnd = () => {
 // 输入处理
 const onInput = (e: any) => {
   store.editContent = e.detail.value
+  if (!store.editContent.trim()) {
+    store.setCurrentTag('')
+    return
+  }
   const lastTag = store.getLastTag(store.editContent)
   if (lastTag) {
     store.setCurrentTag(lastTag)
