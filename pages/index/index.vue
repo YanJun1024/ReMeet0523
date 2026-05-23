@@ -86,12 +86,18 @@
         />
         <!-- 工具栏（键盘弹出时显示） -->
         <view class="edit-toolbar" v-if="keyboardHeight > 0">
-          <text class="toolbar-btn">#</text>
-          <text class="toolbar-btn">🖼️</text>
-          <text class="toolbar-btn">B</text>
-          <text class="toolbar-btn">☰</text>
+          <text class="toolbar-btn" @click="insertHashtag">#</text>
+          <text class="toolbar-btn" @click="onImagePlaceholder">🖼️</text>
+          <text class="toolbar-btn recording" v-if="isRecording" @click="stopRecording">⏹</text>
+          <text class="toolbar-btn" v-else @click="startRecording">🎤</text>
+          <text class="toolbar-btn" @click="onInsertLink">🔗</text>
           <view class="toolbar-spacer"></view>
-          <button class="save-btn" @click="saveNote">发送</button>
+          <button 
+            class="save-btn" 
+            :class="{ disabled: !hasValidTag }" 
+            :disabled="!hasValidTag"
+            @click="saveNote"
+          >保存</button>
         </view>
       </view>
     </view>
@@ -435,6 +441,12 @@ const statusBarHeight = ref(44)
 const keyboardHeight = ref(0)
 const drawerContentHeight = ref(600)
 const darkMode = ref(false)
+const isRecording = ref(false)
+
+// 工具栏：是否有有效标签
+const hasValidTag = computed(() => {
+  return store.extractTags(store.editContent).length > 0
+})
 
 // 词典 API 状态
 const dictLoading = ref(false)
@@ -709,6 +721,7 @@ const onInput = (e: any) => {
 
 // 保存笔记
 const saveNote = () => {
+  if (!hasValidTag.value) return
   if (!store.editContent.trim()) {
     uni.showToast({ title: '请输入内容', icon: 'none' })
     return
@@ -723,6 +736,58 @@ const saveNote = () => {
   store.addNote(store.editContent, tags)
   store.editContent = ''
   uni.showToast({ title: '保存成功', icon: 'success' })
+}
+
+// ── 工具栏按钮 ──
+
+// 插入 # 标签
+const insertHashtag = () => {
+  store.editContent = store.editContent + '#'
+}
+
+// 图片按钮（占位）
+const onImagePlaceholder = () => {
+  uni.showToast({ title: '图片功能开发中', icon: 'none' })
+}
+
+// 链接插入
+const onInsertLink = () => {
+  uni.showModal({
+    title: '插入链接',
+    editable: true,
+    placeholderText: '请输入网址 https://...',
+    success: (res: any) => {
+      if (res.confirm && res.content.trim()) {
+        const url = res.content.trim()
+        store.editContent = store.editContent + ` [链接](${url})`
+      }
+    }
+  })
+}
+
+// 语音录音
+let recorderManager: any = null
+
+const startRecording = () => {
+  recorderManager = uni.getRecorderManager()
+  recorderManager.onStop((res: any) => {
+    isRecording.value = false
+    store.editContent = store.editContent + ` [录音:${res.tempFilePath}]`
+    uni.showToast({ title: '录音已添加', icon: 'success' })
+  })
+  recorderManager.onError(() => {
+    isRecording.value = false
+    uni.showToast({ title: '录音失败', icon: 'none' })
+  })
+  recorderManager.start({ format: 'mp3' })
+  isRecording.value = true
+  uni.showToast({ title: '录音中...再次点击停止', icon: 'none' })
+}
+
+const stopRecording = () => {
+  if (recorderManager) {
+    recorderManager.stop()
+  }
 }
 
 // 格式化日期
@@ -1187,6 +1252,19 @@ onLoad(() => {
   font-size: 16px;
   color: #999999;
   margin-right: 6px;
+  border-radius: 16px;
+}
+
+.toolbar-btn.recording {
+  background-color: #FF3B30;
+  color: #FFFFFF;
+  font-size: 12px;
+  animation: recordingPulse 1s ease-in-out infinite;
+}
+
+@keyframes recordingPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }
 
 .toolbar-spacer {
@@ -1201,6 +1279,11 @@ onLoad(() => {
   border-radius: 18px;
   border: none;
   line-height: 1.4;
+}
+
+.save-btn.disabled {
+  background-color: #D0D0D0;
+  color: #999999;
 }
 
 .save-btn::after {
@@ -1565,10 +1648,12 @@ onLoad(() => {
   z-index: 1000;
   transform: translateX(-100%);
   transition: transform 0.3s ease;
+  visibility: hidden;
 }
 
 .dict-drawer.open {
   transform: translateX(0);
+  visibility: visible;
 }
 
 .dict-content {
@@ -1798,10 +1883,12 @@ onLoad(() => {
   z-index: 1000;
   transform: translateX(100%);
   transition: transform 0.3s ease;
+  visibility: hidden;
 }
 
 .notes-drawer.open {
   transform: translateX(0);
+  visibility: visible;
 }
 
 .notes-list {
