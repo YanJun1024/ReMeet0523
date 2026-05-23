@@ -28,13 +28,6 @@
           @touchcancel="onTouchEnd"
         >
         <!-- 标签标题 -->
-        <view class="tag-header">
-          <text class="tag-icon">🏷️</text>
-          <text class="tag-name">#{{ store.currentTag }}</text>
-        </view>
-        
-        <view class="divider"></view>
-        
         <!-- 笔记内容区域 -->
         <view class="note-content-wrapper">
           <!-- 左侧滑动提示 -->
@@ -70,7 +63,6 @@
     <!-- 编辑区域（底部卡片） -->
     <view class="edit-section">
       <view class="edit-card">
-        <view class="edit-grabber"></view>
         <textarea
           class="edit-input"
           :value="store.editContent"
@@ -79,7 +71,8 @@
           @input="onInput"
           :fixed="true"
         />
-        <view class="edit-toolbar">
+        <!-- 工具栏（键盘弹出时显示） -->
+        <view class="edit-toolbar" v-if="keyboardHeight > 0">
           <text class="toolbar-btn">#</text>
           <text class="toolbar-btn">🖼️</text>
           <text class="toolbar-btn">B</text>
@@ -178,6 +171,7 @@ const store = useAppStore()
 const drawerOpen = ref(false)
 const searchKeyword = ref('')
 const statusBarHeight = ref(44)
+const keyboardHeight = ref(0)
 
 const filteredTags = computed(() => {
   let tags = store.sortedTags
@@ -282,15 +276,20 @@ onLoad(() => {
   if (lastTag) {
     store.setCurrentTag(lastTag)
   }
+  
+  // 监听键盘，控制工具栏显隐
+  uni.onKeyboardHeightChange((res: any) => {
+    keyboardHeight.value = res.height
+  })
 })
 </script>
 
 <style lang="scss" scoped>
 .container {
-  min-height: 100vh;
   background-color: #F8F9FA;
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
 }
 
 .status-bar {
@@ -350,8 +349,8 @@ onLoad(() => {
 }
 
 .card-section {
-  padding: 8px 16px;
-  flex: 1;
+  padding: 4px 16px 8px;
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -368,34 +367,11 @@ onLoad(() => {
   border-radius: 12px;
   padding: 16px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  min-height: 200px;
+  height: 216px;
   display: flex;
   flex-direction: column;
 }
 
-.tag-header {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 12px;
-}
-
-.tag-icon {
-  font-size: 20px;
-  margin-right: 8px;
-}
-
-.tag-name {
-  font-size: 20px;
-  font-weight: 600;
-  color: #4A90E2;
-}
-
-.divider {
-  height: 1px;
-  background-color: #E8E8E8;
-  margin-bottom: 16px;
-}
 
 .note-content-wrapper {
   flex: 1;
@@ -535,16 +511,21 @@ onLoad(() => {
 }
 
 .edit-section {
-  background-color: #F8F9FA;
-  padding: 8px 16px 16px;
-  flex-shrink: 0;
+  background-color: #FFFFFF;
+  padding: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .edit-card {
   background-color: #FFFFFF;
-  border-radius: 12px;
-  padding: 12px 16px 16px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  border-radius: 0;
+  margin: 0;
+  padding: 8px 16px;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
 }
 
 .edit-grabber {
@@ -553,18 +534,20 @@ onLoad(() => {
 
 .edit-input {
   width: 100%;
-  min-height: 100px;
+  height: 108px;
   font-size: 15px;
   color: #333333;
   line-height: 1.6;
 }
 
 .edit-toolbar {
+  background-color: #FFFFFF;
   display: flex;
   align-items: center;
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid #F0F0F0;
+  height: 50px;
+  padding: 0 16px;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .toolbar-btn {
@@ -573,9 +556,9 @@ onLoad(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  font-size: 16px;
   color: #999999;
-  margin-right: 8px;
+  margin-right: 6px;
 }
 
 .toolbar-spacer {
@@ -586,10 +569,10 @@ onLoad(() => {
   background-color: #4A90E2;
   color: #FFFFFF;
   font-size: 14px;
-  padding: 8px 20px;
-  border-radius: 20px;
+  padding: 6px 18px;
+  border-radius: 18px;
   border: none;
-  line-height: 1.5;
+  line-height: 1.4;
 }
 
 .save-btn::after {

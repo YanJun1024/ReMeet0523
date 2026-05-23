@@ -173,6 +173,7 @@ const getNoteSummary = (content: string) => {
   padding: 16px;
   margin-bottom: 12px;
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
+  height: 320px;
 }
 
 .card-header {
