@@ -48,7 +48,7 @@
       </view>
       
       <!-- 标签列表 -->
-      <scroll-view class="tags-list" scroll-y>
+      <scroll-view class="tags-list" scroll-y :style="{ height: scrollHeight + 'px' }">
         <view 
           class="tag-item" 
           v-for="(tag, index) in filteredTags" 
@@ -130,10 +130,13 @@ const searchKeyword = ref('')
 const showModal = ref(false)
 const selectedTag = ref<Tag | null>(null)
 const statusBarHeight = ref(44)
+const scrollHeight = ref(400)
 
 onShow(() => {
   const sysInfo = uni.getSystemInfoSync()
   statusBarHeight.value = sysInfo.statusBarHeight || 44
+  // 计算 scroll-view 高度：窗口高度 - 状态栏 - 导航栏(44) - 搜索区(约100) - 底部间距
+  scrollHeight.value = sysInfo.windowHeight - statusBarHeight.value - 44 - 100
 })
 
 const filteredTags = computed(() => {
@@ -192,10 +195,15 @@ const goToUser = () => {
 }
 
 const goBack = () => {
+  // #ifdef APP-PLUS
   uni.navigateBack({
     animationType: 'slide-out-left',
     animationDuration: 300
   })
+  // #endif
+  // #ifndef APP-PLUS
+  uni.navigateBack()
+  // #endif
 }
 </script>
 
@@ -239,10 +247,6 @@ const goBack = () => {
   color: #333333;
   flex: 1;
   text-align: center;
-}
-
-.nav-placeholder {
-  width: 60px;
 }
 
 .nav-placeholder {
@@ -336,7 +340,7 @@ const goBack = () => {
 }
 
 .tags-list {
-  max-height: calc(100vh - 280px);
+  overflow: hidden;
 }
 
 .tag-item {
@@ -369,7 +373,7 @@ const goBack = () => {
 
 .tag-name {
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 600;
   color: #333333;
   margin-bottom: 4px;
 }

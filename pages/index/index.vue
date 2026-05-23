@@ -3,44 +3,25 @@
     <!-- 状态栏占位 -->
     <view class="status-bar" :style="{ height: statusBarHeight + 'px' }"></view>
     
-    <!-- 顶部工具栏 -->
-    <view class="top-bar">
-      <view class="menu-btn" @click="toggleDrawer">
+    <!-- 顶部导航栏 -->
+    <view class="nav-bar">
+      <view class="nav-back" @click="toggleDrawer">
         <view class="menu-icon">
           <view class="menu-line"></view>
           <view class="menu-line short"></view>
           <view class="menu-line medium"></view>
         </view>
       </view>
-      <text class="top-title">TagWord</text>
-      <view class="top-placeholder"></view>
+      <text class="nav-title">TagWord</text>
+      <view class="nav-placeholder"></view>
     </view>
     
     <!-- 可滑动卡片区域 -->
     <view class="card-section">
       <view class="swipe-container">
-        <!-- 右滑露出层：词典入口 -->
-        <view class="swipe-reveal dict-reveal" :style="{ opacity: dictRevealOpacity }">
-          <text class="reveal-icon">📖</text>
-          <text class="reveal-label">词典</text>
-          <text class="reveal-arrow">→</text>
-        </view>
-        
-        <!-- 左滑露出层：笔记入口 -->
-        <view class="swipe-reveal notes-reveal" :style="{ opacity: notesRevealOpacity }">
-          <text class="reveal-arrow">←</text>
-          <text class="reveal-label">笔记</text>
-          <text class="reveal-icon">📝</text>
-        </view>
-        
         <!-- 主卡片 -->
         <view 
           class="swipe-card"
-          :class="{ 
-            'swiping-left': swipeDirection === 'left',
-            'swiping-right': swipeDirection === 'right'
-          }"
-          :style="{ transform: 'translateX(' + cardOffsetX + 'px)' }"
           @touchstart="onTouchStart"
           @touchmove="onTouchMove"
           @touchend="onTouchEnd"
@@ -56,31 +37,57 @@
         
         <!-- 笔记内容区域 -->
         <view class="note-content-wrapper">
-          <!-- 滑动方向指示 -->
-          <view class="swipe-direction" v-if="!isSwiping">
-            <view class="dir-hint left-hint">
-              <text class="dir-arrow">◀</text>
-              <text class="dir-text">笔记</text>
-            </view>
-            <view class="dir-hint right-hint">
-              <text class="dir-text">词典</text>
-              <text class="dir-arrow">▶</text>
-            </view>
+          <!-- 左侧滑动提示 -->
+          <view class="swipe-hint left">
+            <text class="hint-arrow">◀</text>
+            <text class="hint-text">笔记</text>
           </view>
+          
+          <!-- 笔记内容 -->
+          <view class="note-content" v-if="store.latestNote">
+            <view class="note-date">
+              <text class="date-icon">📅</text>
+              <text class="date-text">{{ formatDate(store.latestNote.createTime) }}</text>
+            </view>
+            <text class="note-text">{{ store.latestNote.content }}</text>
+          </view>
+          
+          <view class="note-content empty" v-else>
+            <text class="empty-text">暂无相关笔记</text>
+            <text class="empty-hint">输入 #{{ store.currentTag }} 创建第一条笔记</text>
+          </view>
+          
+          <!-- 右侧滑动提示 -->
+          <view class="swipe-hint right">
+            <text class="hint-text">词典</text>
+            <text class="hint-arrow">▶</text>
+          </view>
+        </view>
         </view>
       </view>
     </view>
     
-    <!-- 编辑区域 -->
+    <!-- 编辑区域（底部卡片） -->
     <view class="edit-section">
-      <textarea
-        class="edit-input"
-        v-model="store.editContent"
-        placeholder="开始输入...使用 #单词 创建标签"
-        :maxlength="2000"
-        @input="onInput"
-      />
-      <button class="save-btn" @click="saveNote">保存</button>
+      <view class="edit-card">
+        <view class="edit-grabber"></view>
+        <textarea
+          class="edit-input"
+          :value="store.editContent"
+          placeholder="现在的想法是..."
+          :maxlength="2000"
+          @input="onInput"
+          :fixed="true"
+        />
+        <view class="edit-toolbar">
+          <text class="toolbar-btn">#</text>
+          <text class="toolbar-btn">🖼️</text>
+          <text class="toolbar-btn">B</text>
+          <text class="toolbar-btn">☰</text>
+          <view class="toolbar-spacer"></view>
+          <button class="save-btn" @click="saveNote">发送</button>
+        </view>
+      </view>
     </view>
     
     <!-- 抽屉遮罩 -->
@@ -96,10 +103,12 @@
       <view class="drawer-status-bar" :style="{ height: statusBarHeight + 'px' }"></view>
       
       <view class="drawer-header">
-        <text class="drawer-title">标签管理</text>
-        <view class="drawer-close" @click="closeDrawer">
-          <text class="close-icon">✕</text>
+        <view class="nav-back" @click="closeDrawer">
+          <text class="back-icon">←</text>
+          <text class="back-text">返回</text>
         </view>
+        <text class="drawer-title">标签管理</text>
+        <view class="nav-placeholder"></view>
       </view>
       
       <!-- 用户信息（点击进入用户中心） -->
@@ -206,15 +215,15 @@ const goToUser = () => {
 let touchStartX = 0
 let touchEndX = 0
 
-const touchStart = (e: TouchEvent) => {
+const onTouchStart = (e: TouchEvent) => {
   touchStartX = e.touches[0].clientX
 }
 
-const touchMove = (e: TouchEvent) => {
+const onTouchMove = (e: TouchEvent) => {
   touchEndX = e.touches[0].clientX
 }
 
-const touchEnd = () => {
+const onTouchEnd = () => {
   const diff = touchStartX - touchEndX
   const threshold = 80
   
@@ -225,18 +234,17 @@ const touchEnd = () => {
         url: '/pages/notes/notes?tag=' + store.currentTag
       })
     } else {
-      // 右滑 - 进入词典（从左侧滑入）
+      // 右滑 - 进入词典
       uni.navigateTo({
-        url: '/pages/dict/dict?word=' + store.currentTag,
-        animationType: 'slide-in-left',
-        animationDuration: 300
+        url: '/pages/dict/dict?word=' + store.currentTag
       })
     }
   }
 }
 
 // 输入处理
-const onInput = () => {
+const onInput = (e: any) => {
+  store.editContent = e.detail.value
   const lastTag = store.getLastTag(store.editContent)
   if (lastTag) {
     store.setCurrentTag(lastTag)
@@ -290,7 +298,7 @@ onLoad(() => {
 }
 
 /* 顶部工具栏 */
-.top-bar {
+.nav-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -300,13 +308,12 @@ onLoad(() => {
   border-bottom: 1px solid #F0F0F0;
 }
 
-.menu-btn {
+.nav-back {
   width: 60px;
   height: 44px;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  border-radius: 8px;
 }
 
 .menu-icon {
@@ -332,22 +339,28 @@ onLoad(() => {
   width: 80%;
 }
 
-.top-title {
+.nav-title {
   font-size: 17px;
   font-weight: 600;
   color: #333333;
 }
 
-.top-placeholder {
+.nav-placeholder {
   width: 60px;
 }
 
 .card-section {
-  padding: 16px;
+  padding: 8px 16px;
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
+  padding-top: 4px;
+}
+
+.swipe-container {
+  border-radius: 12px;
+  overflow: hidden;
 }
 
 .swipe-card {
@@ -355,7 +368,7 @@ onLoad(() => {
   border-radius: 12px;
   padding: 16px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  min-height: 320px;
+  min-height: 200px;
   display: flex;
   flex-direction: column;
 }
@@ -389,6 +402,55 @@ onLoad(() => {
   display: flex;
   align-items: center;
   position: relative;
+}
+
+.note-content {
+  flex: 1;
+  margin: 0 40px;
+  display: flex;
+  flex-direction: column;
+}
+
+.note-date {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.date-icon {
+  font-size: 14px;
+  margin-right: 6px;
+}
+
+.date-text {
+  font-size: 13px;
+  color: #999999;
+}
+
+.note-text {
+  font-size: 15px;
+  color: #333333;
+  line-height: 1.8;
+  display: -webkit-box;
+  -webkit-line-clamp: 8;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.note-content.empty {
+  justify-content: center;
+  align-items: center;
+}
+
+.empty-text {
+  font-size: 16px;
+  color: #666666;
+  margin-bottom: 8px;
+}
+
+.empty-hint {
+  font-size: 13px;
+  color: #999999;
 }
 
 .swipe-hint {
@@ -473,25 +535,54 @@ onLoad(() => {
 }
 
 .edit-section {
+  background-color: #F8F9FA;
+  padding: 8px 16px 16px;
+  flex-shrink: 0;
+}
+
+.edit-card {
   background-color: #FFFFFF;
-  padding: 16px;
-  border-top: 1px solid #E8E8E8;
-  position: relative;
+  border-radius: 12px;
+  padding: 12px 16px 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.edit-grabber {
+  display: none;
 }
 
 .edit-input {
   width: 100%;
-  min-height: 120px;
+  min-height: 100px;
   font-size: 15px;
   color: #333333;
   line-height: 1.6;
-  padding-bottom: 48px;
+}
+
+.edit-toolbar {
+  display: flex;
+  align-items: center;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #F0F0F0;
+}
+
+.toolbar-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #999999;
+  margin-right: 8px;
+}
+
+.toolbar-spacer {
+  flex: 1;
 }
 
 .save-btn {
-  position: absolute;
-  right: 16px;
-  bottom: 16px;
   background-color: #4A90E2;
   color: #FFFFFF;
   font-size: 14px;
@@ -562,17 +653,7 @@ onLoad(() => {
   color: #333333;
 }
 
-.drawer-close {
-  width: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-}
 
-.close-icon {
-  font-size: 20px;
-  color: #999999;
-}
 
 .drawer-user-wrapper {
   padding: 16px;

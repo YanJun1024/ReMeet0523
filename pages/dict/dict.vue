@@ -122,10 +122,15 @@ onLoad((options) => {
 })
 
 const goBack = () => {
+  // #ifdef APP-PLUS
   uni.navigateBack({
     animationType: 'slide-out-left',
     animationDuration: 300
   })
+  // #endif
+  // #ifndef APP-PLUS
+  uni.navigateBack()
+  // #endif
 }
 
 const playAudio = () => {
@@ -179,11 +184,11 @@ const playAudio = () => {
 }
 
 .nav-action {
-  width: 44px;
+  width: 60px;
   height: 44px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
 }
 
 .action-icon {
@@ -212,7 +217,7 @@ const playAudio = () => {
 }
 
 .phonetic {
-  font-size: 15px;
+  font-size: 13px;
   color: #999999;
   font-style: italic;
 }

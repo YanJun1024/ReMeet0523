@@ -79,7 +79,15 @@ onLoad((options) => {
 })
 
 const goBack = () => {
+  // #ifdef APP-PLUS
+  uni.navigateBack({
+    animationType: 'slide-out-left',
+    animationDuration: 300
+  })
+  // #endif
+  // #ifndef APP-PLUS
   uni.navigateBack()
+  // #endif
 }
 
 const viewNoteDetail = (note: Note) => {
@@ -192,7 +200,7 @@ const getNoteSummary = (content: string) => {
 .card-summary {
   display: block;
   font-size: 14px;
-  color: #666666;
+  color: #333333;
   line-height: 1.8;
 }
 

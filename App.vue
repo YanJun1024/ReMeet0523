@@ -11,10 +11,7 @@ onLaunch(() => {
 page {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   background-color: #F8F9FA;
-}
-
-/* 主色调 */
-:root {
+  /* 主色调 - 小程序使用 page 选择器 */
   --primary-color: #4A90E2;
   --primary-light: #E3F2FD;
   --text-primary: #333333;

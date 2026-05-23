@@ -199,7 +199,7 @@ const aboutUs = () => {
 }
 
 .user-scroll {
-  padding: 0 16px 16px;
+  padding: 16px;
 }
 
 .user-section {
@@ -228,7 +228,7 @@ const aboutUs = () => {
 }
 
 .user-name {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   color: #333333;
   margin-bottom: 4px;
