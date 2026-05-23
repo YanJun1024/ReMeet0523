@@ -16,7 +16,10 @@ export interface Tag {
   noteCount: number
   status: 'learning' | 'mastered'
   createTime: number
+  lastReviewedAt: number
 }
+
+export type SortMode = 'noteCount' | 'alphabet' | 'time'
 
 export const useAppStore = defineStore('app', () => {
   // 状态
@@ -45,30 +48,36 @@ export const useAppStore = defineStore('app', () => {
   ])
   
   const tags = ref<Tag[]>([
-    { name: 'Apple', noteCount: 12, status: 'learning', createTime: Date.now() },
-    { name: 'Ball', noteCount: 8, status: 'learning', createTime: Date.now() },
-    { name: 'Book', noteCount: 8, status: 'learning', createTime: Date.now() },
-    { name: 'Fruit', noteCount: 5, status: 'learning', createTime: Date.now() },
-    { name: 'Learn', noteCount: 3, status: 'learning', createTime: Date.now() }
+    { name: 'Apple', noteCount: 12, status: 'learning', createTime: Date.now() - 3000000, lastReviewedAt: Date.now() - 86400000 },
+    { name: 'Ball', noteCount: 8, status: 'learning', createTime: Date.now() - 2000000, lastReviewedAt: Date.now() - 172800000 },
+    { name: 'Book', noteCount: 8, status: 'learning', createTime: Date.now() - 4000000, lastReviewedAt: Date.now() - 259200000 },
+    { name: 'Fruit', noteCount: 5, status: 'learning', createTime: Date.now() - 1000000, lastReviewedAt: Date.now() - 518400000 },
+    { name: 'Learn', noteCount: 3, status: 'learning', createTime: Date.now() - 500000, lastReviewedAt: Date.now() - 864000000 }
   ])
   
   const currentTag = ref<string>('Ball')
   const editContent = ref('今天学习了 #Apple 的用法，\n然后学习了 #Ball，\n它可以表示球类运动。')
+  const sortMode = ref<SortMode>('noteCount')
   
   // 计算属性
   const sortedTags = computed(() => {
-    return [...tags.value].sort((a, b) => {
-      // 状态排序：学习中 > 已学会
-      if (a.status !== b.status) {
-        return a.status === 'learning' ? -1 : 1
+    const learning = tags.value.filter(t => t.status === 'learning')
+    const mastered = tags.value.filter(t => t.status === 'mastered')
+
+    const sortFn = (a: Tag, b: Tag) => {
+      switch (sortMode.value) {
+        case 'alphabet':
+          return a.name.localeCompare(b.name)
+        case 'time':
+          return b.lastReviewedAt - a.lastReviewedAt
+        case 'noteCount':
+        default:
+          if (b.noteCount !== a.noteCount) return b.noteCount - a.noteCount
+          return a.name.localeCompare(b.name)
       }
-      // 笔记数量降序
-      if (b.noteCount !== a.noteCount) {
-        return b.noteCount - a.noteCount
-      }
-      // 字母升序
-      return a.name.localeCompare(b.name)
-    })
+    }
+
+    return [...learning.sort(sortFn), ...mastered.sort(sortFn)]
   })
   
   const currentTagNotes = computed(() => {
@@ -106,7 +115,8 @@ export const useAppStore = defineStore('app', () => {
           name: tagName,
           noteCount: 1,
           status: 'learning',
-          createTime: Date.now()
+          createTime: Date.now(),
+          lastReviewedAt: Date.now()
         })
       }
     })
@@ -117,6 +127,35 @@ export const useAppStore = defineStore('app', () => {
     if (tag) {
       tag.status = 'mastered'
     }
+  }
+
+  const toggleTagStatus = (tagName: string) => {
+    const tag = tags.value.find(t => t.name === tagName)
+    if (tag) {
+      tag.status = tag.status === 'learning' ? 'mastered' : 'learning'
+    }
+  }
+
+  const deleteTag = (tagName: string) => {
+    const idx = tags.value.findIndex(t => t.name === tagName)
+    if (idx !== -1) {
+      tags.value.splice(idx, 1)
+    }
+    // 同时移除该标签在所有笔记中的关联
+    notes.value.forEach(note => {
+      note.tags = note.tags.filter(t => t !== tagName)
+    })
+  }
+
+  const updateLastReviewed = (tagName: string) => {
+    const tag = tags.value.find(t => t.name === tagName)
+    if (tag) {
+      tag.lastReviewedAt = Date.now()
+    }
+  }
+
+  const setSortMode = (mode: SortMode) => {
+    sortMode.value = mode
   }
   
   const extractTags = (content: string): string[] => {
@@ -135,12 +174,17 @@ export const useAppStore = defineStore('app', () => {
     tags,
     currentTag,
     editContent,
+    sortMode,
     sortedTags,
     currentTagNotes,
     latestNote,
     setCurrentTag,
     addNote,
     markTagAsMastered,
+    toggleTagStatus,
+    deleteTag,
+    updateLastReviewed,
+    setSortMode,
     extractTags,
     getLastTag
   }
