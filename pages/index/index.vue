@@ -961,7 +961,7 @@ const skipGuide = () => {
 
 <style lang="scss" scoped>
 .container {
-  background-color: #F8F9FA;
+  background-color: #E8EAED;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -1080,10 +1080,13 @@ const skipGuide = () => {
 }
 
 .swipe-card {
-  background-color: #FFFFFF;
-  border-radius: 12px;
+  background-color: #F8F9FA;
+  border-radius: 20px;
   padding: 16px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  /* 外阴影 + 内高光（Neumorphism 轻量版） */
+  box-shadow:
+    8px 8px 16px rgba(0, 0, 0, 0.05),
+    -8px -8px 16px rgba(255, 255, 255, 0.8);
   height: 238px;
   display: flex;
   flex-direction: column;
