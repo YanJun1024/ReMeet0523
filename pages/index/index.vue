@@ -1,5 +1,38 @@
 <template>
   <view class="container">
+    <!-- 首次启动引导页 -->
+    <view class="guide-overlay" v-if="showGuide">
+      <swiper class="guide-swiper" :current="guideStep" @change="onGuideChange">
+        <swiper-item>
+          <view class="guide-page">
+            <text class="guide-icon">🏷️</text>
+            <text class="guide-title">用标签记录单词</text>
+            <text class="guide-desc">在输入框中用 # 标记单词，如 #apple，系统会自动为你管理学习进度。</text>
+          </view>
+        </swiper-item>
+        <swiper-item>
+          <view class="guide-page">
+            <text class="guide-icon">👋</text>
+            <text class="guide-title">滑动卡片</text>
+            <text class="guide-desc">左右滑动中间的展示卡片：\n← 向左滑查看笔记列表\n→ 向右滑查词典释义</text>
+          </view>
+        </swiper-item>
+        <swiper-item>
+          <view class="guide-page">
+            <text class="guide-icon">📚</text>
+            <text class="guide-title">管理你的标签</text>
+            <text class="guide-desc">点击左上角 ☰ 打开标签面板，支持排序、搜索，同样支持左右滑动操作。</text>
+          </view>
+        </swiper-item>
+      </swiper>
+      <view class="guide-dots">
+        <view class="guide-dot" :class="{ active: guideStep === 0 }"></view>
+        <view class="guide-dot" :class="{ active: guideStep === 1 }"></view>
+        <view class="guide-dot" :class="{ active: guideStep === 2 }"></view>
+      </view>
+      <button class="guide-btn" @click="skipGuide">{{ guideStep < 2 ? '跳过' : '开始使用' }}</button>
+    </view>
+    
     <!-- 状态栏占位 -->
     <view class="status-bar" :style="{ height: statusBarHeight + 'px' }"></view>
     
@@ -48,20 +81,22 @@
         >
         <!-- 笔记内容区域 -->
         <view class="note-content-wrapper">
-          <!-- 笔记内容 -->
-          <view class="note-content" v-if="store.latestNote">
+          <!-- 场景1: 无标签输入 -->
+          <view class="note-content empty" v-if="!store.currentTag">
+            <text class="empty-icon">🏷️</text>
+            <text class="empty-text">输入一个 #英文单词</text>
+            <text class="empty-hint">写下你的想法，开始学习吧 ~</text>
+            <text class="empty-hint-sub">左右滑动卡片可查看笔记和词典</text>
+          </view>
+          <!-- 场景2: 有标签且有笔记 -->
+          <view class="note-content" v-else-if="store.latestNote">
             <view class="note-date">
               <text class="date-icon">📅</text>
               <text class="date-text">{{ formatDate(store.latestNote.createTime) }}</text>
             </view>
             <text class="note-text">{{ store.latestNote.content }}</text>
           </view>
-          
-          <view class="note-content empty" v-else-if="!store.currentTag">
-            <text class="empty-icon">🏷️</text>
-            <text class="empty-text">输入一个 #英文单词</text>
-            <text class="empty-hint">写下你的想法，开始学习吧 ~</text>
-          </view>
+          <!-- 场景3: 有标签但无笔记 -->
           <view class="note-content empty" v-else>
             <text class="empty-icon">📝</text>
             <text class="empty-text">#{{ store.currentTag }} 还没有笔记</text>
@@ -87,10 +122,7 @@
         <!-- 工具栏（键盘弹出时显示） -->
         <view class="edit-toolbar" v-if="keyboardHeight > 0">
           <text class="toolbar-btn" @click="insertHashtag">#</text>
-          <text class="toolbar-btn" @click="onImagePlaceholder">🖼️</text>
-          <text class="toolbar-btn recording" v-if="isRecording" @click="stopRecording">⏹</text>
-          <text class="toolbar-btn" v-else @click="startRecording">🎤</text>
-          <text class="toolbar-btn" @click="onInsertLink">🔗</text>
+          <text class="toolbar-btn" @click="insertOrderedList">1.</text>
           <view class="toolbar-spacer"></view>
           <button 
             class="save-btn" 
@@ -411,6 +443,11 @@
             <text class="setting-title">夜间模式</text>
             <switch class="setting-switch" :checked="darkMode" @change="toggleDarkMode" />
           </view>
+          <view class="setting-item" @click="showHelp">
+            <text class="setting-icon">❓</text>
+            <text class="setting-title">使用帮助</text>
+            <text class="setting-arrow">›</text>
+          </view>
           <view class="setting-item" @click="aboutUs">
             <text class="setting-icon">ℹ️</text>
             <text class="setting-title">关于我们</text>
@@ -441,11 +478,24 @@ const statusBarHeight = ref(44)
 const keyboardHeight = ref(0)
 const drawerContentHeight = ref(600)
 const darkMode = ref(false)
-const isRecording = ref(false)
+
+// 引导页状态
+const showGuide = ref(false)
+const guideStep = ref(0)
 
 // 工具栏：是否有有效标签
 const hasValidTag = computed(() => {
   return store.extractTags(store.editContent).length > 0
+})
+
+// 监听 editContent 变化，同步 currentTag（兜底 onInput 未触发的场景）
+watch(() => store.editContent, (newVal) => {
+  if (!newVal.trim()) {
+    store.setCurrentTag('')
+  } else {
+    const lastTag = store.getLastTag(newVal)
+    store.setCurrentTag(lastTag || '')
+  }
 })
 
 // 词典 API 状态
@@ -709,14 +759,6 @@ const onTouchEnd = () => {
 // 输入处理
 const onInput = (e: any) => {
   store.editContent = e.detail.value
-  if (!store.editContent.trim()) {
-    store.setCurrentTag('')
-    return
-  }
-  const lastTag = store.getLastTag(store.editContent)
-  if (lastTag) {
-    store.setCurrentTag(lastTag)
-  }
 }
 
 // 保存笔记
@@ -735,6 +777,7 @@ const saveNote = () => {
   
   store.addNote(store.editContent, tags)
   store.editContent = ''
+  store.setCurrentTag('')
   uni.showToast({ title: '保存成功', icon: 'success' })
 }
 
@@ -745,48 +788,21 @@ const insertHashtag = () => {
   store.editContent = store.editContent + '#'
 }
 
-// 图片按钮（占位）
-const onImagePlaceholder = () => {
-  uni.showToast({ title: '图片功能开发中', icon: 'none' })
-}
-
-// 链接插入
-const onInsertLink = () => {
-  uni.showModal({
-    title: '插入链接',
-    editable: true,
-    placeholderText: '请输入网址 https://...',
-    success: (res: any) => {
-      if (res.confirm && res.content.trim()) {
-        const url = res.content.trim()
-        store.editContent = store.editContent + ` [链接](${url})`
-      }
-    }
-  })
-}
-
-// 语音录音
-let recorderManager: any = null
-
-const startRecording = () => {
-  recorderManager = uni.getRecorderManager()
-  recorderManager.onStop((res: any) => {
-    isRecording.value = false
-    store.editContent = store.editContent + ` [录音:${res.tempFilePath}]`
-    uni.showToast({ title: '录音已添加', icon: 'success' })
-  })
-  recorderManager.onError(() => {
-    isRecording.value = false
-    uni.showToast({ title: '录音失败', icon: 'none' })
-  })
-  recorderManager.start({ format: 'mp3' })
-  isRecording.value = true
-  uni.showToast({ title: '录音中...再次点击停止', icon: 'none' })
-}
-
-const stopRecording = () => {
-  if (recorderManager) {
-    recorderManager.stop()
+// 插入有序列表序号
+const insertOrderedList = () => {
+  const text = store.editContent
+  // 找到当前行首
+  const lastNewline = text.lastIndexOf('\n')
+  const lineStart = lastNewline === -1 ? text : text.substring(lastNewline + 1)
+  
+  // 已有编号 → 递进
+  const match = lineStart.match(/^(\d+)\.\s/)
+  let num = 1
+  if (match) {
+    num = parseInt(match[1]) + 1
+    store.editContent = text.substring(0, (lastNewline === -1 ? 0 : lastNewline + 1)) + `${num}. ` + lineStart.substring(match[0].length)
+  } else {
+    store.editContent = text + '\n1. '
   }
 }
 
@@ -895,6 +911,15 @@ const toggleDarkMode = () => {
   uni.showToast({ title: darkMode.value ? '夜间模式已开启' : '夜间模式已关闭', icon: 'none' })
 }
 
+const showHelp = () => {
+  uni.showModal({
+    title: '使用帮助',
+    content: '【写笔记】\n在输入框中用 # 标记单词，如 #apple，写完后点击保存。\n\n【查看笔记与词典】\n左右滑动中间的展示卡片：\n• 向左滑 → 查看笔记列表\n• 向右滑 → 查看词典释义\n\n【管理标签】\n点击左上角 ☰ 打开标签面板，支持排序、搜索、滑动操作。\n\n【工具栏】\n键盘弹出时：\n• # 按钮 → 快速插入标签\n• 1. 按钮 → 插入有序列表',
+    showCancel: false,
+    confirmText: '知道了'
+  })
+}
+
 const aboutUs = () => {
   uni.showModal({
     title: '关于 TagWord',
@@ -912,11 +937,26 @@ onLoad(() => {
     store.setCurrentTag(lastTag)
   }
   
+  // 首次启动显示引导页
+  if (!store.hasShownGuide) {
+    showGuide.value = true
+  }
+  
   // 监听键盘，控制工具栏显隐
   uni.onKeyboardHeightChange((res: any) => {
     keyboardHeight.value = res.height
   })
 })
+
+// 引导页处理
+const onGuideChange = (e: any) => {
+  guideStep.value = e.detail.current
+}
+
+const skipGuide = () => {
+  showGuide.value = false
+  store.setHasShownGuide(true)
+}
 </script>
 
 <style lang="scss" scoped>
@@ -1150,6 +1190,12 @@ onLoad(() => {
   color: #999999;
 }
 
+.empty-hint-sub {
+  font-size: 11px;
+  color: #BBBBBB;
+  margin-top: 8px;
+}
+
 .note-content {
   flex: 1;
   display: flex;
@@ -1253,18 +1299,6 @@ onLoad(() => {
   color: #999999;
   margin-right: 6px;
   border-radius: 16px;
-}
-
-.toolbar-btn.recording {
-  background-color: #FF3B30;
-  color: #FFFFFF;
-  font-size: 12px;
-  animation: recordingPulse 1s ease-in-out infinite;
-}
-
-@keyframes recordingPulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
 }
 
 .toolbar-spacer {
@@ -2112,5 +2146,87 @@ onLoad(() => {
 
 .setting-switch {
   transform: scale(0.8);
+}
+
+/* 引导页样式 */
+.guide-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #FFFFFF;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.guide-swiper {
+  width: 100%;
+  height: 60vh;
+}
+
+.guide-page {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 40px;
+}
+
+.guide-icon {
+  font-size: 64px;
+  margin-bottom: 24px;
+}
+
+.guide-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 16px;
+}
+
+.guide-desc {
+  font-size: 15px;
+  color: #666666;
+  text-align: center;
+  line-height: 1.8;
+  white-space: pre-line;
+}
+
+.guide-dots {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 30px;
+}
+
+.guide-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  background-color: #DDDDDD;
+  margin: 0 6px;
+  transition: all 0.3s ease;
+}
+
+.guide-dot.active {
+  width: 24px;
+  background-color: #4A90E2;
+}
+
+.guide-btn {
+  background-color: #4A90E2;
+  color: #FFFFFF;
+  font-size: 16px;
+  padding: 12px 48px;
+  border-radius: 24px;
+  border: none;
+}
+
+.guide-btn::after {
+  border: none;
 }
 </style>

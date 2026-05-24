@@ -23,41 +23,18 @@ export type SortMode = 'noteCount' | 'alphabet' | 'time'
 
 export const useAppStore = defineStore('app', () => {
   // 状态
-  const notes = ref<Note[]>([
-    {
-      id: '1',
-      content: '今天学习了 Ball 的用法，它可以表示球类运动，也可以表示舞会。常见搭配有 play ball、have a ball 等。',
-      tags: ['Ball'],
-      createTime: Date.now() - 86400000,
-      updateTime: Date.now() - 86400000
-    },
-    {
-      id: '2',
-      content: 'Apple 既可以表示水果，也可以表示科技公司。Apple 公司发布了新款 iPhone。',
-      tags: ['Apple', 'iPhone'],
-      createTime: Date.now() - 172800000,
-      updateTime: Date.now() - 172800000
-    },
-    {
-      id: '3',
-      content: 'Book 表示书籍，也可以表示预订。I booked a room at the hotel.',
-      tags: ['Book'],
-      createTime: Date.now() - 259200000,
-      updateTime: Date.now() - 259200000
-    }
-  ])
+  const notes = ref<Note[]>([])
   
-  const tags = ref<Tag[]>([
-    { name: 'Apple', noteCount: 12, status: 'learning', createTime: Date.now() - 3000000, lastReviewedAt: Date.now() - 86400000 },
-    { name: 'Ball', noteCount: 8, status: 'learning', createTime: Date.now() - 2000000, lastReviewedAt: Date.now() - 172800000 },
-    { name: 'Book', noteCount: 8, status: 'learning', createTime: Date.now() - 4000000, lastReviewedAt: Date.now() - 259200000 },
-    { name: 'Fruit', noteCount: 5, status: 'learning', createTime: Date.now() - 1000000, lastReviewedAt: Date.now() - 518400000 },
-    { name: 'Learn', noteCount: 3, status: 'learning', createTime: Date.now() - 500000, lastReviewedAt: Date.now() - 864000000 }
-  ])
+  const tags = ref<Tag[]>([])
   
-  const currentTag = ref<string>('Ball')
-  const editContent = ref('今天学习了 #Apple 的用法，\n然后学习了 #Ball，\n它可以表示球类运动。')
+  const currentTag = ref<string>('')
+  const editContent = ref('')
   const sortMode = ref<SortMode>('noteCount')
+  const hasShownGuide = ref(false)
+  
+  const setHasShownGuide = (value: boolean) => {
+    hasShownGuide.value = value
+  }
   
   // 计算属性
   const sortedTags = computed(() => {
@@ -178,10 +155,12 @@ export const useAppStore = defineStore('app', () => {
     currentTag,
     editContent,
     sortMode,
+    hasShownGuide,
     sortedTags,
     currentTagNotes,
     latestNote,
     setCurrentTag,
+    setHasShownGuide,
     addNote,
     markTagAsMastered,
     toggleTagStatus,
