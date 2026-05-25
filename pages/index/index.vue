@@ -111,43 +111,40 @@
     <view 
       class="edit-section" 
       :class="{ 'edit-focused': isInputFocused }"
-      :style="{ transform: `translateY(-${editSectionBottom}px)` }"
       @click="focusInput"
     >
-      <!-- 未聚焦状态：点击提示区域 -->
-      <view class="edit-placeholder" v-if="!isInputFocused">
-        <text class="placeholder-hint">点击这里开始记录...</text>
-      </view>
-      
-      <!-- 聚焦状态：输入框 + 工具栏 -->
-      <view class="edit-container" v-else>
+      <!-- 输入框容器 -->
+      <view class="edit-input-wrapper">
         <textarea
           ref="editTextarea"
           class="edit-input"
+          :class="{ 'input-focused': isInputFocused }"
           :value="store.editContent"
-          placeholder="试试输入 #hello 然后写点什么..."
+          :placeholder="isInputFocused ? '试试输入 #hello 然后写点什么...' : '点击这里开始记录...'"
           :maxlength="2000"
           :auto-height="true"
           :show-confirm-bar="false"
-          :adjust-position="false"
-          :cursor-spacing="0"
+          :adjust-position="true"
+          :cursor-spacing="8"
+          :hold-keyboard="true"
           @input="onInput"
           @focus="onInputFocus"
           @blur="onInputBlur"
           @linechange="onLineChange"
         />
-        <!-- 工具栏 -->
-        <view class="edit-toolbar">
-          <text class="toolbar-btn" @click.stop="insertHashtag">#</text>
-          <text class="toolbar-btn" @click.stop="insertOrderedList">1.</text>
-          <view class="toolbar-spacer"></view>
-          <button 
-            class="save-btn" 
-            :class="{ disabled: !hasValidTag }" 
-            :disabled="!hasValidTag"
-            @click.stop="saveNote"
-          >保存</button>
-        </view>
+      </view>
+      
+      <!-- 工具栏（聚焦时显示） -->
+      <view class="edit-toolbar" v-show="isInputFocused">
+        <text class="toolbar-btn" @click.stop="insertHashtag">#</text>
+        <text class="toolbar-btn" @click.stop="insertOrderedList">1.</text>
+        <view class="toolbar-spacer"></view>
+        <button 
+          class="save-btn" 
+          :class="{ disabled: !hasValidTag }" 
+          :disabled="!hasValidTag"
+          @click.stop="saveNote"
+        >保存</button>
       </view>
     </view>
     
@@ -502,29 +499,17 @@ const darkMode = ref(false)
 // 输入区域状态
 const isInputFocused = ref(false)
 const inputLineCount = ref(2)
-const baseInputHeight = 72 // 两行基础高度
-const maxInputHeight = 144 // 最大四行高度
 const editTextarea = ref<any>(null)
 
 // 引导页状态
 const showGuide = ref(false)
 const guideStep = ref(0)
 
-// 计算输入框动态高度
-const inputHeight = computed(() => {
-  const lineHeight = 24
-  const padding = 16
-  const lines = Math.min(Math.max(inputLineCount.value, 2), 6)
-  return lines * lineHeight + padding
-})
-
-// 计算编辑区域底部偏移（键盘弹出时）
-const editSectionBottom = computed(() => {
-  if (keyboardHeight.value > 0) {
-    return keyboardHeight.value
-  }
-  return 0
-})
+// 输入框高度配置
+const MIN_LINES = 2  // 最小行数
+const MAX_LINES = 3  // 最大行数
+const LINE_HEIGHT = 24  // 每行高度
+const INPUT_PADDING = 20  // 上下内边距总和
 
 // 工具栏：是否有有效标签
 const hasValidTag = computed(() => {
@@ -808,15 +793,6 @@ const onInput = (e: any) => {
 const focusInput = () => {
   if (!isInputFocused.value) {
     isInputFocused.value = true
-    // 延迟聚焦，确保 textarea 已渲染
-    setTimeout(() => {
-      if (editTextarea.value) {
-        uni.createSelectorQuery()
-          .select('.edit-input')
-          .fields({ node: true }, () => {})
-          .exec()
-      }
-    }, 50)
   }
 }
 
@@ -827,15 +803,20 @@ const onInputFocus = () => {
 
 // 输入框失去焦点
 const onInputBlur = () => {
-  // 如果有内容，保持显示
-  if (!store.editContent.trim()) {
-    isInputFocused.value = false
-  }
+  // 延迟检查，避免点击工具栏时失焦
+  setTimeout(() => {
+    // 如果有内容，保持显示
+    if (!store.editContent.trim()) {
+      isInputFocused.value = false
+    }
+  }, 200)
 }
 
 // 输入框行数变化
 const onLineChange = (e: any) => {
-  inputLineCount.value = e.detail.lineCount || 2
+  const lineCount = e.detail.lineCount || 2
+  // 限制在 2-3 行之间
+  inputLineCount.value = Math.min(Math.max(lineCount, MIN_LINES), MAX_LINES)
 }
 
 // 保存笔记
@@ -1037,10 +1018,6 @@ onLoad(() => {
   // 监听键盘高度变化
   uni.onKeyboardHeightChange((res: any) => {
     keyboardHeight.value = res.height
-    // 键盘收起时，如果没有内容则隐藏输入区域
-    if (res.height === 0 && !store.editContent.trim()) {
-      isInputFocused.value = false
-    }
   })
 })
 
@@ -1120,7 +1097,7 @@ const skipGuide = () => {
 }
 
 .card-section {
-  padding: 4px 16px 80px;
+  padding: 4px 16px 12px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -1349,81 +1326,76 @@ const skipGuide = () => {
 }
 
 .edit-section {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
   background-color: #FFFFFF;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
-  z-index: 100;
-  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  min-height: 60px;
-  padding-bottom: env(safe-area-inset-bottom);
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.06);
+  margin: 0 12px;
+  padding: 10px 12px;
+  padding-bottom: calc(10px + env(safe-area-inset-bottom));
+  transition: all 0.2s ease;
 }
 
 .edit-section.edit-focused {
-  box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+  margin: 0 8px;
+  padding: 12px 14px;
+  padding-bottom: calc(12px + env(safe-area-inset-bottom));
 }
 
-/* 未聚焦时的占位提示 */
-.edit-placeholder {
-  padding: 20px 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 60px;
-}
-
-.placeholder-hint {
-  font-size: 15px;
-  color: #CCCCCC;
-}
-
-/* 聚焦时的输入容器 */
-.edit-container {
-  padding: 12px 16px 0;
-  background-color: #FFFFFF;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
+/* 输入框容器 */
+.edit-input-wrapper {
+  width: 100%;
 }
 
 .edit-input {
   width: 100%;
-  min-height: 48px;
-  max-height: 144px;
+  min-height: 68px;  /* 2行高度: 24*2 + 20 */
+  max-height: 92px;  /* 3行高度: 24*3 + 20 */
   font-size: 15px;
-  color: #333333;
-  line-height: 1.6;
-  background-color: #F8F9FA;
-  border-radius: 12px;
-  padding: 12px 14px;
+  color: #666666;
+  line-height: 24px;
+  background-color: #F5F5F5;
+  border-radius: 10px;
+  padding: 10px 12px;
   box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.edit-input.input-focused {
+  color: #333333;
+  background-color: #F8F9FA;
+  min-height: 68px;
+  max-height: 92px;
 }
 
 .edit-toolbar {
-  background-color: #FFFFFF;
+  background-color: transparent;
   display: flex;
   align-items: center;
-  height: 48px;
+  height: 44px;
   padding: 0 4px;
-  border-radius: 0;
-  box-shadow: none;
-  border-top: 1px solid #F0F0F0;
   margin-top: 8px;
+  transition: all 0.2s ease;
 }
 
 .toolbar-btn {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 16px;
-  color: #999999;
-  margin-right: 6px;
-  border-radius: 16px;
+  color: #666666;
+  margin-right: 8px;
+  border-radius: 8px;
+  background-color: #F0F0F0;
+  transition: all 0.15s ease;
+}
+
+.toolbar-btn:active {
+  background-color: #E0E0E0;
+  transform: scale(0.95);
 }
 
 .toolbar-spacer {
@@ -1434,15 +1406,26 @@ const skipGuide = () => {
   background-color: #4A90E2;
   color: #FFFFFF;
   font-size: 14px;
-  padding: 6px 18px;
-  border-radius: 18px;
+  padding: 8px 20px;
+  border-radius: 8px;
   border: none;
   line-height: 1.4;
+  font-weight: 500;
+  transition: all 0.15s ease;
+}
+
+.save-btn:active {
+  background-color: #3A7BC8;
+  transform: scale(0.98);
 }
 
 .save-btn.disabled {
   background-color: #D0D0D0;
   color: #999999;
+}
+
+.save-btn.disabled:active {
+  transform: none;
 }
 
 .save-btn::after {
