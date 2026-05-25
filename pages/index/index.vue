@@ -108,27 +108,44 @@
     </view>
     
     <!-- 编辑区域（底部卡片） -->
-    <view class="edit-section">
-      <view class="edit-card">
+    <view 
+      class="edit-section" 
+      :class="{ 'edit-focused': isInputFocused }"
+      :style="{ transform: `translateY(-${editSectionBottom}px)` }"
+      @click="focusInput"
+    >
+      <!-- 未聚焦状态：点击提示区域 -->
+      <view class="edit-placeholder" v-if="!isInputFocused">
+        <text class="placeholder-hint">点击这里开始记录...</text>
+      </view>
+      
+      <!-- 聚焦状态：输入框 + 工具栏 -->
+      <view class="edit-container" v-else>
         <textarea
+          ref="editTextarea"
           class="edit-input"
           :value="store.editContent"
           placeholder="试试输入 #hello 然后写点什么..."
           :maxlength="2000"
-          @input="onInput"
-          :fixed="true"
+          :auto-height="true"
           :show-confirm-bar="false"
+          :adjust-position="false"
+          :cursor-spacing="0"
+          @input="onInput"
+          @focus="onInputFocus"
+          @blur="onInputBlur"
+          @linechange="onLineChange"
         />
-        <!-- 工具栏（键盘弹出时显示） -->
-        <view class="edit-toolbar" v-if="keyboardHeight > 0">
-          <text class="toolbar-btn" @click="insertHashtag">#</text>
-          <text class="toolbar-btn" @click="insertOrderedList">1.</text>
+        <!-- 工具栏 -->
+        <view class="edit-toolbar">
+          <text class="toolbar-btn" @click.stop="insertHashtag">#</text>
+          <text class="toolbar-btn" @click.stop="insertOrderedList">1.</text>
           <view class="toolbar-spacer"></view>
           <button 
             class="save-btn" 
             :class="{ disabled: !hasValidTag }" 
             :disabled="!hasValidTag"
-            @click="saveNote"
+            @click.stop="saveNote"
           >保存</button>
         </view>
       </view>
@@ -210,8 +227,8 @@
             @touchend="onTagTouchEnd(tag)"
             @longpress="onTagLongPress(tag)"
           >
-          <view class="tag-rank" v-if="index < 3">
-            <text class="rank-icon">{{ ['🥇', '🥈', '🥉'][index] }}</text>
+          <view class="tag-rank" v-if="Number(index) < 3">
+            <text class="rank-icon">{{ ['🥇', '🥈', '🥉'][Number(index)] }}</text>
           </view>
           <view class="tag-rank" v-else>
             <text class="rank-dot">•</text>
@@ -307,13 +324,13 @@
         <view class="section-card" v-if="dictData.meanings.length > 0">
           <text class="section-title">释义</text>
           <view class="meaning-item" v-for="(meaning, index) in dictData.meanings" :key="index">
-            <text class="part-of-speech">
-              {{ meaning.partOfSpeechCN }}
+            <view class="part-of-speech">
+              <text>{{ meaning.partOfSpeechCN }}</text>
               <text class="pos-en">{{ meaning.partOfSpeech }}</text>
-            </text>
+            </view>
             <view class="definitions">
               <view class="definition-item" v-for="(def, idx) in meaning.definitions" :key="idx">
-                <text class="definition-en">{{ idx + 1 }}. {{ def.definition }}</text>
+                <text class="definition-en">{{ Number(idx) + 1 }}. {{ def.definition }}</text>
                 <text class="definition-zh" v-if="def.definitionCN">{{ def.definitionCN }}</text>
               </view>
             </view>
@@ -323,7 +340,7 @@
         <view class="section-card" v-if="dictData.examples.length > 0">
           <text class="section-title">例句</text>
           <view class="example-item" v-for="(example, index) in dictData.examples.slice(0, 4)" :key="index">
-            <text class="example-en">{{ index + 1 }}. {{ example.en }}</text>
+            <text class="example-en">{{ Number(index) + 1 }}. {{ example.en }}</text>
             <text class="example-zh" v-if="example.zh">{{ example.zh }}</text>
           </view>
         </view>
@@ -468,6 +485,9 @@ import type { SortMode } from '@/stores'
 import { fetchWordDict } from '@/utils/dictApi'
 import type { DictData } from '@/utils/dictApi'
 
+// 声明 uni 全局变量
+declare const uni: any
+
 const store = useAppStore()
 const drawerOpen = ref(false)
 const dictDrawerOpen = ref(false)
@@ -479,9 +499,32 @@ const keyboardHeight = ref(0)
 const drawerContentHeight = ref(600)
 const darkMode = ref(false)
 
+// 输入区域状态
+const isInputFocused = ref(false)
+const inputLineCount = ref(2)
+const baseInputHeight = 72 // 两行基础高度
+const maxInputHeight = 144 // 最大四行高度
+const editTextarea = ref<any>(null)
+
 // 引导页状态
 const showGuide = ref(false)
 const guideStep = ref(0)
+
+// 计算输入框动态高度
+const inputHeight = computed(() => {
+  const lineHeight = 24
+  const padding = 16
+  const lines = Math.min(Math.max(inputLineCount.value, 2), 6)
+  return lines * lineHeight + padding
+})
+
+// 计算编辑区域底部偏移（键盘弹出时）
+const editSectionBottom = computed(() => {
+  if (keyboardHeight.value > 0) {
+    return keyboardHeight.value
+  }
+  return 0
+})
 
 // 工具栏：是否有有效标签
 const hasValidTag = computed(() => {
@@ -489,7 +532,7 @@ const hasValidTag = computed(() => {
 })
 
 // 监听 editContent 变化，同步 currentTag（兜底 onInput 未触发的场景）
-watch(() => store.editContent, (newVal) => {
+watch(() => store.editContent, (newVal: string) => {
   if (!newVal.trim()) {
     store.setCurrentTag('')
   } else {
@@ -507,7 +550,7 @@ const filteredTags = computed(() => {
   let tags = store.sortedTags
   if (searchKeyword.value.trim()) {
     const keyword = searchKeyword.value.toLowerCase()
-    tags = tags.filter(tag => tag.name.toLowerCase().includes(keyword))
+    tags = tags.filter((tag: Tag) => tag.name.toLowerCase().includes(keyword))
   }
   return tags
 })
@@ -536,7 +579,7 @@ const dictData = computed(() => {
 })
 
 // 监听词典抽屉打开 → 触发 API 查询
-watch(dictDrawerOpen, async (open) => {
+watch(dictDrawerOpen, async (open: boolean) => {
   if (open) {
     store.updateLastReviewed(store.currentTag)
     dictLoading.value = true
@@ -761,6 +804,40 @@ const onInput = (e: any) => {
   store.editContent = e.detail.value
 }
 
+// 输入框聚焦处理
+const focusInput = () => {
+  if (!isInputFocused.value) {
+    isInputFocused.value = true
+    // 延迟聚焦，确保 textarea 已渲染
+    setTimeout(() => {
+      if (editTextarea.value) {
+        uni.createSelectorQuery()
+          .select('.edit-input')
+          .fields({ node: true }, () => {})
+          .exec()
+      }
+    }, 50)
+  }
+}
+
+// 输入框获得焦点
+const onInputFocus = () => {
+  isInputFocused.value = true
+}
+
+// 输入框失去焦点
+const onInputBlur = () => {
+  // 如果有内容，保持显示
+  if (!store.editContent.trim()) {
+    isInputFocused.value = false
+  }
+}
+
+// 输入框行数变化
+const onLineChange = (e: any) => {
+  inputLineCount.value = e.detail.lineCount || 2
+}
+
 // 保存笔记
 const saveNote = () => {
   if (!hasValidTag.value) return
@@ -778,6 +855,11 @@ const saveNote = () => {
   store.addNote(store.editContent, tags)
   store.editContent = ''
   store.setCurrentTag('')
+  
+  // 保存后收起键盘并隐藏输入区域
+  uni.hideKeyboard()
+  isInputFocused.value = false
+  
   uni.showToast({ title: '保存成功', icon: 'success' })
 }
 
@@ -828,6 +910,16 @@ const getRelativeTime = (timestamp: number) => {
 }
 
 // 播放词典音频
+const playAudio = () => {
+  if (dictData.value.ukAudio) {
+    playDictAudio(dictData.value.ukAudio)
+  } else if (dictData.value.usAudio) {
+    playDictAudio(dictData.value.usAudio)
+  } else {
+    uni.showToast({ title: '无发音数据', icon: 'none' })
+  }
+}
+
 const playDictAudio = (audioUrl: string) => {
   if (!audioUrl) {
     uni.showToast({ title: '无发音数据', icon: 'none' })
@@ -942,9 +1034,13 @@ onLoad(() => {
     showGuide.value = true
   }
   
-  // 监听键盘，控制工具栏显隐
+  // 监听键盘高度变化
   uni.onKeyboardHeightChange((res: any) => {
     keyboardHeight.value = res.height
+    // 键盘收起时，如果没有内容则隐藏输入区域
+    if (res.height === 0 && !store.editContent.trim()) {
+      isInputFocused.value = false
+    }
   })
 })
 
@@ -1024,7 +1120,7 @@ const skipGuide = () => {
 }
 
 .card-section {
-  padding: 4px 16px 8px;
+  padding: 4px 16px 80px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -1253,43 +1349,69 @@ const skipGuide = () => {
 }
 
 .edit-section {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background-color: #FFFFFF;
-  padding: 0;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+  z-index: 100;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 60px;
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
-.edit-card {
-  background-color: #FFFFFF;
-  border-radius: 0;
-  margin: 0 16px;
-  padding: 8px 0;
-  box-shadow: none;
-  display: flex;
-  flex-direction: column;
+.edit-section.edit-focused {
+  box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.12);
 }
 
-.edit-grabber {
-  display: none;
+/* 未聚焦时的占位提示 */
+.edit-placeholder {
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60px;
+}
+
+.placeholder-hint {
+  font-size: 15px;
+  color: #CCCCCC;
+}
+
+/* 聚焦时的输入容器 */
+.edit-container {
+  padding: 12px 16px 0;
+  background-color: #FFFFFF;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
 }
 
 .edit-input {
   width: 100%;
-  height: 130px;
+  min-height: 48px;
+  max-height: 144px;
   font-size: 15px;
   color: #333333;
   line-height: 1.6;
+  background-color: #F8F9FA;
+  border-radius: 12px;
+  padding: 12px 14px;
+  box-sizing: border-box;
 }
 
 .edit-toolbar {
   background-color: #FFFFFF;
   display: flex;
   align-items: center;
-  height: 50px;
-  padding: 0;
+  height: 48px;
+  padding: 0 4px;
   border-radius: 0;
   box-shadow: none;
+  border-top: 1px solid #F0F0F0;
+  margin-top: 8px;
 }
 
 .toolbar-btn {

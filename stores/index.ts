@@ -63,6 +63,14 @@ export const useAppStore = defineStore('app', () => {
       .sort((a, b) => b.createTime - a.createTime)
   })
   
+  // 获取指定标签的笔记列表
+  const notesForTag = (tagName: string) => {
+    if (!tagName) return []
+    return notes.value
+      .filter(note => note.tags.includes(tagName))
+      .sort((a, b) => b.createTime - a.createTime)
+  }
+  
   const latestNote = computed(() => {
     return currentTagNotes.value[0] || null
   })
@@ -159,6 +167,7 @@ export const useAppStore = defineStore('app', () => {
     sortedTags,
     currentTagNotes,
     latestNote,
+    notesForTag,
     setCurrentTag,
     setHasShownGuide,
     addNote,
