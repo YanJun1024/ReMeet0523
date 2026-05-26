@@ -1497,28 +1497,33 @@ const skipGuide = () => {
 
 /* 输入框容器 */
 .edit-container {
-  padding: 16px 20px;
-  padding-bottom: calc(16px + env(safe-area-inset-bottom));
+  padding: 12px 16px;
+  padding-bottom: calc(12px + env(safe-area-inset-bottom));
   background-color: #FFFFFF;
-  min-height: 200px;
+  min-height: auto;
   display: flex;
   flex-direction: column;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  gap: 8px;
 }
 
 .edit-input-wrapper {
   width: 100%;
+  flex: 1;
+  min-height: 0;
 }
 
 .edit-input {
   width: 100%;
-  min-height: 68px;  /* 2行高度: 24*2 + 20 */
-  max-height: 92px;  /* 3行高度: 24*3 + 20 */
+  min-height: 56px;  /* 减小最小高度 */
+  max-height: 80px;  /* 减小最大高度 */
   font-size: 15px;
   color: #666666;
-  line-height: 24px;
+  line-height: 22px;
   background-color: #F5F5F5;
-  border-radius: 10px;
-  padding: 10px 12px;
+  border-radius: 12px;
+  padding: 8px 12px;
   box-sizing: border-box;
   transition: all 0.2s ease;
 }
@@ -1526,18 +1531,19 @@ const skipGuide = () => {
 .edit-input.input-focused {
   color: #333333;
   background-color: #F8F9FA;
-  min-height: 68px;
-  max-height: 92px;
+  min-height: 56px;
+  max-height: 80px;
 }
 
 .edit-toolbar {
   background-color: transparent;
   display: flex;
   align-items: center;
-  height: 44px;
+  height: 40px;
   padding: 0 4px;
-  margin-top: 8px;
+  margin-top: 0;
   transition: all 0.2s ease;
+  flex-shrink: 0;
 }
 
 .toolbar-btn {
