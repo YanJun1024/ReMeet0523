@@ -110,41 +110,47 @@
     <!-- 编辑区域（底部卡片） -->
     <view 
       class="edit-section" 
-      :class="{ 'edit-focused': isInputFocused }"
-      @click="focusInput"
+      :class="{ 'keyboard-open': isKeyboardOpen }"
     >
-      <!-- 输入框容器 -->
-      <view class="edit-input-wrapper">
-        <textarea
-          ref="editTextarea"
-          class="edit-input"
-          :class="{ 'input-focused': isInputFocused }"
-          :value="store.editContent"
-          :placeholder="isInputFocused ? '试试输入 #hello 然后写点什么...' : '点击这里开始记录...'"
-          :maxlength="2000"
-          :auto-height="true"
-          :show-confirm-bar="false"
-          :adjust-position="true"
-          :cursor-spacing="8"
-          :hold-keyboard="true"
-          @input="onInput"
-          @focus="onInputFocus"
-          @blur="onInputBlur"
-          @linechange="onLineChange"
-        />
+      <!-- 输入框 + 工具栏（键盘弹出时显示） -->
+      <view class="edit-container" v-if="isKeyboardOpen" key="edit">
+        <view class="edit-input-wrapper">
+          <textarea
+            ref="editTextarea"
+            class="edit-input"
+            :value="store.editContent"
+            placeholder="试试输入 #hello 然后写点什么..."
+            :maxlength="2000"
+            :auto-height="true"
+            :show-confirm-bar="false"
+            :adjust-position="true"
+            :cursor-spacing="8"
+            :hold-keyboard="true"
+            :focus="true"
+            @input="onInput"
+            @blur="onInputBlur"
+            @linechange="onLineChange"
+          />
+        </view>
+        
+        <!-- 工具栏 -->
+        <view class="edit-toolbar">
+          <text class="toolbar-btn" @click.stop="insertHashtag">#</text>
+          <text class="toolbar-btn" @click.stop="insertOrderedList">1.</text>
+          <view class="toolbar-spacer"></view>
+          <button 
+            class="save-btn" 
+            :class="{ disabled: !hasValidTag }" 
+            :disabled="!hasValidTag"
+            @click.stop="saveNote"
+          >保存</button>
+        </view>
       </view>
       
-      <!-- 工具栏（聚焦时显示） -->
-      <view class="edit-toolbar" v-show="isInputFocused">
-        <text class="toolbar-btn" @click.stop="insertHashtag">#</text>
-        <text class="toolbar-btn" @click.stop="insertOrderedList">1.</text>
-        <view class="toolbar-spacer"></view>
-        <button 
-          class="save-btn" 
-          :class="{ disabled: !hasValidTag }" 
-          :disabled="!hasValidTag"
-          @click.stop="saveNote"
-        >保存</button>
+      <!-- 品牌提示（键盘收起时显示） -->
+      <view class="brand-hint" v-else key="hint" @click="onHintClick">
+        <text class="hint-text">点击输入</text>
+        <text class="brand-watermark">TagWord</text>
       </view>
     </view>
     
@@ -474,7 +480,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, nextTick } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { useAppStore } from '@/stores'
 import type { Tag, Note } from '@/stores'
@@ -497,9 +503,17 @@ const drawerContentHeight = ref(600)
 const darkMode = ref(false)
 
 // 输入区域状态
-const isInputFocused = ref(false)
 const inputLineCount = ref(2)
 const editTextarea = ref<any>(null)
+
+// 键盘驱动 UI：用户点击计数（方案 A）
+let userHintClickCount = 0
+
+// 强制键盘打开状态（用于点击品牌提示时）
+const forceKeyboardOpen = ref(false)
+
+// 计算属性：键盘是否弹出
+const isKeyboardOpen = computed(() => keyboardHeight.value > 0 || forceKeyboardOpen.value)
 
 // 引导页状态
 const showGuide = ref(false)
@@ -523,6 +537,17 @@ watch(() => store.editContent, (newVal: string) => {
   } else {
     const lastTag = store.getLastTag(newVal)
     store.setCurrentTag(lastTag || '')
+  }
+})
+
+// 监听引导页状态，引导页关闭后自动唤起键盘
+watch(() => showGuide.value, (newVal: boolean, oldVal: boolean) => {
+  // 引导页从显示变为隐藏
+  if (oldVal === true && newVal === false) {
+    // 引导页结束后，强制打开键盘
+    forceKeyboardOpen.value = true
+    // 重置用户点击计数
+    userHintClickCount = 0
   }
 })
 
@@ -588,11 +613,39 @@ const filteredNotes = computed(() => {
 })
 
 const toggleDrawer = () => {
-  drawerOpen.value = !drawerOpen.value
+  if (drawerOpen.value) {
+    // 关闭抽屉 → 唤起键盘
+    drawerOpen.value = false
+    focusInputAfterClose()
+  } else {
+    // 打开抽屉 → 先收起键盘
+    uni.hideKeyboard()
+    drawerOpen.value = true
+  }
+}
+
+// 唤起键盘的辅助函数（带防抖）
+let focusTimer: any = null
+const focusInputAfterClose = () => {
+  if (focusTimer) clearTimeout(focusTimer)
+  focusTimer = setTimeout(() => {
+    // 确保所有抽屉都关闭后才唤起键盘
+    if (!drawerOpen.value && !dictDrawerOpen.value && !notesDrawerOpen.value && !userDrawerOpen.value) {
+      // 强制打开键盘
+      forceKeyboardOpen.value = true
+      // 重置用户点击计数
+      userHintClickCount = 0
+      // 等待 DOM 更新
+      nextTick(() => {
+        // textarea 应该已经显示并聚焦
+      })
+    }
+  }, 300)
 }
 
 const closeDrawer = () => {
   drawerOpen.value = false
+  focusInputAfterClose()
 }
 
 const closeAllDrawers = () => {
@@ -600,24 +653,29 @@ const closeAllDrawers = () => {
   dictDrawerOpen.value = false
   notesDrawerOpen.value = false
   userDrawerOpen.value = false
+  focusInputAfterClose()
 }
 
 const closeDictDrawer = () => {
   dictDrawerOpen.value = false
+  focusInputAfterClose()
 }
 
 const closeNotesDrawer = () => {
   notesDrawerOpen.value = false
+  focusInputAfterClose()
 }
 
 const closeUserDrawer = () => {
   userDrawerOpen.value = false
+  focusInputAfterClose()
 }
 
 const selectTag = (tag: Tag) => {
   store.setCurrentTag(tag.name)
   store.updateLastReviewed(tag.name)
-  // 不关闭标签抽屉，直接打开笔记抽屉盖在上面
+  // 打开笔记抽屉前先收起键盘
+  uni.hideKeyboard()
   notesDrawerOpen.value = true
 }
 
@@ -625,7 +683,8 @@ const selectTag = (tag: Tag) => {
 const openDictForTag = (tag: Tag) => {
   store.setCurrentTag(tag.name)
   store.updateLastReviewed(tag.name)
-  // 不关闭标签抽屉，直接打开词典抽屉盖在上面
+  // 打开词典抽屉前先收起键盘
+  uni.hideKeyboard()
   dictDrawerOpen.value = true
 }
 
@@ -729,7 +788,8 @@ const onDeleteTag = (tag: Tag) => {
 
 // 进入用户中心（抽屉式）
 const goToUser = () => {
-  closeDrawer()
+  uni.hideKeyboard()
+  drawerOpen.value = false
   setTimeout(() => {
     userDrawerOpen.value = true
   }, 300)
@@ -768,12 +828,14 @@ const onTouchEnd = () => {
     if (diff > 0) {
       // 右滑 → 打开词典抽屉
       swipeOffsetX.value = 0
+      uni.hideKeyboard()
       closeAllDrawers()
       store.updateLastReviewed(store.currentTag)
       setTimeout(() => dictDrawerOpen.value = true, 50)
     } else {
       // 左滑 → 打开笔记抽屉
       swipeOffsetX.value = 0
+      uni.hideKeyboard()
       closeAllDrawers()
       store.updateLastReviewed(store.currentTag)
       setTimeout(() => notesDrawerOpen.value = true, 50)
@@ -790,26 +852,35 @@ const onInput = (e: any) => {
 }
 
 // 输入框聚焦处理
-const focusInput = () => {
-  if (!isInputFocused.value) {
-    isInputFocused.value = true
-  }
+
+// 品牌提示点击事件
+const onHintClick = () => {
+  userHintClickCount++
+  // 点击提示区域，强制打开键盘
+  forceKeyboardOpen.value = true
+  // 等待 DOM 更新后，确保 textarea 显示并聚焦
+  nextTick(() => {
+    // DOM 已更新，textarea 应该已经显示
+    // :focus="true" 会自动聚焦
+  })
 }
 
-// 输入框获得焦点
-const onInputFocus = () => {
-  isInputFocused.value = true
-}
-
-// 输入框失去焦点
+// 输入框失去焦点（键盘收起时触发）
 const onInputBlur = () => {
-  // 延迟检查，避免点击工具栏时失焦
-  setTimeout(() => {
-    // 如果有内容，保持显示
-    if (!store.editContent.trim()) {
-      isInputFocused.value = false
-    }
-  }, 200)
+  // 重置强制键盘打开状态
+  forceKeyboardOpen.value = false
+  
+  // 不再自动重新唤起键盘，允许用户主动退出
+  // 键盘将在以下情况自动唤起：
+  // 1. 页面加载/引导页结束
+  // 2. 关闭抽屉后
+  // 3. 保存笔记后
+  // 4. 用户点击品牌提示区域
+}
+
+// 检查是否有抽屉打开
+const isAnyDrawerOpen = () => {
+  return drawerOpen.value || dictDrawerOpen.value || notesDrawerOpen.value || userDrawerOpen.value
 }
 
 // 输入框行数变化
@@ -837,11 +908,11 @@ const saveNote = () => {
   store.editContent = ''
   store.setCurrentTag('')
   
-  // 保存后收起键盘并隐藏输入区域
-  uni.hideKeyboard()
-  isInputFocused.value = false
-  
   uni.showToast({ title: '保存成功', icon: 'success' })
+  
+  // 保存后重置用户点击计数，并强制打开键盘
+  userHintClickCount = 0
+  forceKeyboardOpen.value = true
 }
 
 // ── 工具栏按钮 ──
@@ -1013,6 +1084,10 @@ onLoad(() => {
   // 首次启动显示引导页
   if (!store.hasShownGuide) {
     showGuide.value = true
+    // 引导页关闭后自动唤起键盘（通过 watch 监听 showGuide）
+  } else {
+    // 非首次启动，强制打开键盘
+    forceKeyboardOpen.value = true
   }
   
   // 监听键盘高度变化
@@ -1029,6 +1104,7 @@ const onGuideChange = (e: any) => {
 const skipGuide = () => {
   showGuide.value = false
   store.setHasShownGuide(true)
+  // 键盘唤起由 watch 监听 showGuide 处理
 }
 </script>
 
@@ -1097,12 +1173,13 @@ const skipGuide = () => {
 }
 
 .card-section {
-  padding: 4px 16px 12px;
+  padding: 4px 16px 16px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   padding-top: 4px;
+  margin-bottom: 8px;
 }
 
 .swipe-container {
@@ -1326,24 +1403,108 @@ const skipGuide = () => {
 }
 
 .edit-section {
-  background-color: #FFFFFF;
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
-  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.06);
-  margin: 0 12px;
-  padding: 10px 12px;
-  padding-bottom: calc(10px + env(safe-area-inset-bottom));
-  transition: all 0.2s ease;
+  background-color: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.08);
+  margin: 0;
+  width: 100%;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
 }
 
-.edit-section.edit-focused {
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
-  margin: 0 8px;
-  padding: 12px 14px;
-  padding-bottom: calc(12px + env(safe-area-inset-bottom));
+.edit-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+}
+
+.edit-section.keyboard-open {
+  box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.12);
+  background-color: #FFFFFF;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* 品牌提示区域 - 毛玻璃风格 */
+.brand-hint {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background: linear-gradient(180deg, 
+    rgba(255, 255, 255, 0.6) 0%, 
+    rgba(248, 249, 250, 0.8) 50%,
+    rgba(240, 242, 245, 0.9) 100%
+  );
+  position: relative;
+}
+
+.brand-hint::before {
+  content: '';
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, rgba(74, 144, 226, 0.08) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.brand-hint::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60%;
+  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.02));
+  pointer-events: none;
+}
+
+.hint-text {
+  font-size: 15px;
+  color: #888888;
+  margin-bottom: 16px;
+  font-weight: 400;
+  letter-spacing: 1px;
+  position: relative;
+  z-index: 1;
+}
+
+.brand-watermark {
+  font-size: 36px;
+  font-weight: 700;
+  color: #E0E0E0;
+  letter-spacing: 4px;
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 /* 输入框容器 */
+.edit-container {
+  padding: 16px 20px;
+  padding-bottom: calc(16px + env(safe-area-inset-bottom));
+  background-color: #FFFFFF;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+}
+
 .edit-input-wrapper {
   width: 100%;
 }
