@@ -1,5 +1,5 @@
 {
-  "name": "TagWord",
+  "name": "MeetRe",
   "appid": "__UNI__TAGWORD001",
   "description": "标签式语言学习工具",
   "versionName": "1.0.0",
@@ -52,7 +52,14 @@
     "optimization": {
       "subPackages": true
     },
-    "runmode": "lib"
+    "runmode": "lib",
+    "permission": {
+      "scope.userLocation": {
+        "desc": "你的位置信息将用于小程序位置接口的效果展示"
+      }
+    },
+    "requiredPrivateInfos": [],
+    "requestDomain": ["https://api.dictionaryapi.dev", "https://api.mymemory.translated.net"]
   },
   "mp-alipay": {
     "usingComponents": true

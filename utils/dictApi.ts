@@ -195,11 +195,23 @@ export async function fetchWordDict(word: string): Promise<DictData | null> {
     }
   } catch (err: any) {
     console.error('[dictApi] 请求失败:', JSON.stringify(err))
-    uni.showToast({
-      title: err.errMsg || '查询失败，请检查网络',
-      icon: 'none',
-      duration: 2000,
-    })
+    
+    // 检查是否是域名未配置问题
+    const errMsg = err.errMsg || err.message || ''
+    if (errMsg.includes('request:fail') || errMsg.includes('url not in domain list')) {
+      uni.showModal({
+        title: '词典服务不可用',
+        content: '小程序需要配置词典 API 域名。\n\n解决方案：\n1. 登录微信公众平台\n2. 开发管理 → 开发设置 → 服务器域名\n3. 添加 request 合法域名：\n   https://api.dictionaryapi.dev\n   https://api.mymemory.translated.net',
+        showCancel: false,
+        confirmText: '知道了'
+      })
+    } else {
+      uni.showToast({
+        title: '查询失败，请检查网络',
+        icon: 'none',
+        duration: 2000,
+      })
+    }
     return null
   }
 }

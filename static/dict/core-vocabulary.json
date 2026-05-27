@@ -1,0 +1,1322 @@
+{
+  "version": "1.0.0",
+  "total": 200,
+  "words": {
+    "apple": {
+      "word": "apple",
+      "phonetic": "/ˈæpl/",
+      "translation": "n. 苹果",
+      "level": "basic",
+      "examples": ["I eat an apple every day.|我每天都吃一个苹果。", "The apple is red.|这个苹果是红色的。"]
+    },
+    "book": {
+      "word": "book",
+      "phonetic": "/bʊk/",
+      "translation": "n. 书；v. 预订",
+      "level": "basic",
+      "examples": ["I like reading books.|我喜欢读书。", "Can I book a table?|我能预订一张桌子吗？"]
+    },
+    "cat": {
+      "word": "cat",
+      "phonetic": "/kæt/",
+      "translation": "n. 猫",
+      "level": "basic",
+      "examples": ["The cat is sleeping.|猫在睡觉。", "I have a black cat.|我有一只黑猫。"]
+    },
+    "dog": {
+      "word": "dog",
+      "phonetic": "/dɒɡ/",
+      "translation": "n. 狗",
+      "level": "basic",
+      "examples": ["The dog is running.|狗在跑。", "Dogs are loyal animals.|狗是忠诚的动物。"]
+    },
+    "hello": {
+      "word": "hello",
+      "phonetic": "/həˈləʊ/",
+      "translation": "int. 你好；n. 问候",
+      "level": "basic",
+      "examples": ["Hello, how are you?|你好，你好吗？", "Say hello to your mom.|向你妈妈问好。"]
+    },
+    "water": {
+      "word": "water",
+      "phonetic": "/ˈwɔːtə(r)/",
+      "translation": "n. 水；v. 浇水",
+      "level": "basic",
+      "examples": ["I need some water.|我需要一些水。", "Please water the plants.|请给植物浇水。"]
+    },
+    "time": {
+      "word": "time",
+      "phonetic": "/taɪm/",
+      "translation": "n. 时间；次数；时代",
+      "level": "basic",
+      "examples": ["What time is it?|现在几点了？", "Time flies.|时光飞逝。"]
+    },
+    "love": {
+      "word": "love",
+      "phonetic": "/lʌv/",
+      "translation": "n. 爱；v. 爱，热爱",
+      "level": "basic",
+      "examples": ["I love you.|我爱你。", "Love is beautiful.|爱是美好的。"]
+    },
+    "friend": {
+      "word": "friend",
+      "phonetic": "/frend/",
+      "translation": "n. 朋友",
+      "level": "basic",
+      "examples": ["He is my best friend.|他是我最好的朋友。", "A friend in need is a friend indeed.|患难见真情。"]
+    },
+    "family": {
+      "word": "family",
+      "phonetic": "/ˈfæməli/",
+      "translation": "n. 家庭；家人；子女",
+      "level": "basic",
+      "examples": ["My family is important to me.|我的家庭对我很重要。", "I have a big family.|我有一个大家庭。"]
+    },
+    "work": {
+      "word": "work",
+      "phonetic": "/wɜːk/",
+      "translation": "n. 工作；v. 工作，运转",
+      "level": "basic",
+      "examples": ["I go to work at 9.|我9点去上班。", "The machine doesn't work.|机器坏了。"]
+    },
+    "school": {
+      "word": "school",
+      "phonetic": "/skuːl/",
+      "translation": "n. 学校；学派",
+      "level": "basic",
+      "examples": ["I go to school every day.|我每天上学。", "Which school do you go to?|你上哪个学校？"]
+    },
+    "home": {
+      "word": "home",
+      "phonetic": "/həʊm/",
+      "translation": "n. 家；adv. 回家",
+      "level": "basic",
+      "examples": ["Welcome home!|欢迎回家！", "There's no place like home.|金窝银窝不如自己的狗窝。"]
+    },
+    "food": {
+      "word": "food",
+      "phonetic": "/fuːd/",
+      "translation": "n. 食物",
+      "level": "basic",
+      "examples": ["This food is delicious.|这食物很美味。", "We need to buy some food.|我们需要买些食物。"]
+    },
+    "happy": {
+      "word": "happy",
+      "phonetic": "/ˈhæpi/",
+      "translation": "adj. 快乐的；幸福的",
+      "level": "basic",
+      "examples": ["I'm so happy today.|我今天很开心。", "Happy birthday!|生日快乐！"]
+    },
+    "good": {
+      "word": "good",
+      "phonetic": "/ɡʊd/",
+      "translation": "adj. 好的；n. 好处",
+      "level": "basic",
+      "examples": ["That's a good idea.|那是个好主意。", "Reading is good for you.|阅读对你有好处。"]
+    },
+    "bad": {
+      "word": "bad",
+      "phonetic": "/bæd/",
+      "translation": "adj. 坏的；糟糕的",
+      "level": "basic",
+      "examples": ["That's a bad habit.|那是个坏习惯。", "The weather is bad today.|今天天气很糟糕。"]
+    },
+    "big": {
+      "word": "big",
+      "phonetic": "/bɪɡ/",
+      "translation": "adj. 大的；重要的",
+      "level": "basic",
+      "examples": ["This is a big house.|这是个大房子。", "I have big dreams.|我有大梦想。"]
+    },
+    "small": {
+      "word": "small",
+      "phonetic": "/smɔːl/",
+      "translation": "adj. 小的；少的",
+      "level": "basic",
+      "examples": ["It's a small world.|世界真小。", "I live in a small town.|我住在一个小镇。"]
+    },
+    "new": {
+      "word": "new",
+      "phonetic": "/njuː/",
+      "translation": "adj. 新的；新鲜的",
+      "level": "basic",
+      "examples": ["I bought a new phone.|我买了新手机。", "Happy New Year!|新年快乐！"]
+    },
+    "old": {
+      "word": "old",
+      "phonetic": "/əʊld/",
+      "translation": "adj. 老的；旧的",
+      "level": "basic",
+      "examples": ["How old are you?|你多大了？", "This is an old book.|这是一本旧书。"]
+    },
+    "young": {
+      "word": "young",
+      "phonetic": "/jʌŋ/",
+      "translation": "adj. 年轻的；n. 年轻人",
+      "level": "basic",
+      "examples": ["She looks young.|她看起来很年轻。", "The young are our future.|年轻人是我们的未来。"]
+    },
+    "man": {
+      "word": "man",
+      "phonetic": "/mæn/",
+      "translation": "n. 男人；人类",
+      "level": "basic",
+      "examples": ["He is a tall man.|他是个高个子男人。", "Man cannot live without water.|人类没有水无法生存。"]
+    },
+    "woman": {
+      "word": "woman",
+      "phonetic": "/ˈwʊmən/",
+      "translation": "n. 女人；妇女",
+      "level": "basic",
+      "examples": ["She is a kind woman.|她是个善良的女人。", "Women play an important role.|妇女扮演重要角色。"]
+    },
+    "boy": {
+      "word": "boy",
+      "phonetic": "/bɔɪ/",
+      "translation": "n. 男孩；儿子",
+      "level": "basic",
+      "examples": ["The boy is playing football.|男孩在踢足球。", "Boys will be boys.|男孩子总归是男孩子。"]
+    },
+    "girl": {
+      "word": "girl",
+      "phonetic": "/ɡɜːl/",
+      "translation": "n. 女孩；女儿",
+      "level": "basic",
+      "examples": ["The girl is reading.|女孩在读书。", "She has a baby girl.|她有个女婴。"]
+    },
+    "day": {
+      "word": "day",
+      "phonetic": "/deɪ/",
+      "translation": "n. 天；白天；时代",
+      "level": "basic",
+      "examples": ["Have a nice day!|祝你今天愉快！", "I work eight hours a day.|我每天工作八小时。"]
+    },
+    "night": {
+      "word": "night",
+      "phonetic": "/naɪt/",
+      "translation": "n. 夜晚",
+      "level": "basic",
+      "examples": ["Good night!|晚安！", "The city is beautiful at night.|这座城市夜晚很美。"]
+    },
+    "morning": {
+      "word": "morning",
+      "phonetic": "/ˈmɔːnɪŋ/",
+      "translation": "n. 早晨；上午",
+      "level": "basic",
+      "examples": ["Good morning!|早上好！", "I prefer to study in the morning.|我喜欢在早上学习。"]
+    },
+    "evening": {
+      "word": "evening",
+      "phonetic": "/ˈiːvnɪŋ/",
+      "translation": "n. 傍晚；晚上",
+      "level": "basic",
+      "examples": ["Good evening!|晚上好！", "Let's meet in the evening.|我们晚上见面吧。"]
+    },
+    "today": {
+      "word": "today",
+      "phonetic": "/təˈdeɪ/",
+      "translation": "n. 今天；adv. 在今天",
+      "level": "basic",
+      "examples": ["Today is Monday.|今天是星期一。", "I'm busy today.|我今天很忙。"]
+    },
+    "tomorrow": {
+      "word": "tomorrow",
+      "phonetic": "/təˈmɒrəʊ/",
+      "translation": "n. 明天；adv. 在明天",
+      "level": "basic",
+      "examples": ["See you tomorrow!|明天见！", "Tomorrow will be better.|明天会更好。"]
+    },
+    "yesterday": {
+      "word": "yesterday",
+      "phonetic": "/ˈjestədeɪ/",
+      "translation": "n. 昨天；adv. 在昨天",
+      "level": "basic",
+      "examples": ["I met him yesterday.|我昨天遇见他了。", "Yesterday was Sunday.|昨天是星期天。"]
+    },
+    "week": {
+      "word": "week",
+      "phonetic": "/wiːk/",
+      "translation": "n. 星期；周",
+      "level": "basic",
+      "examples": ["There are seven days in a week.|一周有七天。", "I'll see you next week.|下周见。"]
+    },
+    "month": {
+      "word": "month",
+      "phonetic": "/mʌnθ/",
+      "translation": "n. 月；月份",
+      "level": "basic",
+      "examples": ["My birthday is next month.|我的生日在下个月。", "December is the last month.|十二月是最后一个月。"]
+    },
+    "year": {
+      "word": "year",
+      "phonetic": "/jɪə(r)/",
+      "translation": "n. 年；年度",
+      "level": "basic",
+      "examples": ["Happy New Year!|新年快乐！", "I lived there for three years.|我在那里住了三年。"]
+    },
+    "sun": {
+      "word": "sun",
+      "phonetic": "/sʌn/",
+      "translation": "n. 太阳；阳光",
+      "level": "basic",
+      "examples": ["The sun is shining.|阳光灿烂。", "Don't look directly at the sun.|不要直视太阳。"]
+    },
+    "moon": {
+      "word": "moon",
+      "phonetic": "/muːn/",
+      "translation": "n. 月亮；月球",
+      "level": "basic",
+      "examples": ["The moon is bright tonight.|今晚月亮很亮。", "Man landed on the moon in 1969.|人类于1969年登月。"]
+    },
+    "star": {
+      "word": "star",
+      "phonetic": "/stɑː(r)/",
+      "translation": "n. 星星；明星；v. 主演",
+      "level": "basic",
+      "examples": ["The stars are beautiful tonight.|今晚星星很美。", "She is a movie star.|她是电影明星。"]
+    },
+    "sky": {
+      "word": "sky",
+      "phonetic": "/skaɪ/",
+      "translation": "n. 天空",
+      "level": "basic",
+      "examples": ["The sky is blue.|天空是蓝色的。", "Look at the sky!|看天空！"]
+    },
+    "cloud": {
+      "word": "cloud",
+      "phonetic": "/klaʊd/",
+      "translation": "n. 云；阴影",
+      "level": "basic",
+      "examples": ["The clouds are white.|云是白色的。", "Every cloud has a silver lining.|黑暗中总有一线光明。"]
+    },
+    "rain": {
+      "word": "rain",
+      "phonetic": "/reɪn/",
+      "translation": "n. 雨；v. 下雨",
+      "level": "basic",
+      "examples": ["It's raining.|下雨了。", "Take an umbrella in case of rain.|带把伞以防下雨。"]
+    },
+    "snow": {
+      "word": "snow",
+      "phonetic": "/snəʊ/",
+      "translation": "n. 雪；v. 下雪",
+      "level": "basic",
+      "examples": ["It's snowing.|下雪了。", "The ground is covered with snow.|地面被雪覆盖。"]
+    },
+    "wind": {
+      "word": "wind",
+      "phonetic": "/wɪnd/",
+      "translation": "n. 风；v. 缠绕",
+      "level": "basic",
+      "examples": ["The wind is strong.|风很大。", "Wind the clock.|给钟上发条。"]
+    },
+    "tree": {
+      "word": "tree",
+      "phonetic": "/triː/",
+      "translation": "n. 树；树木",
+      "level": "basic",
+      "examples": ["The tree is tall.|这棵树很高。", "Birds live in trees.|鸟住在树上。"]
+    },
+    "flower": {
+      "word": "flower",
+      "phonetic": "/ˈflaʊə(r)/",
+      "translation": "n. 花；v. 开花",
+      "level": "basic",
+      "examples": ["These flowers are beautiful.|这些花很美。", "The roses are flowering.|玫瑰正在开花。"]
+    },
+    "grass": {
+      "word": "grass",
+      "phonetic": "/ɡrɑːs/",
+      "translation": "n. 草；草地",
+      "level": "basic",
+      "examples": ["Don't walk on the grass.|不要在草地上走。", "The grass is green.|草是绿色的。"]
+    },
+    "mountain": {
+      "word": "mountain",
+      "phonetic": "/ˈmaʊntən/",
+      "translation": "n. 山；山脉",
+      "level": "basic",
+      "examples": ["The mountain is high.|这座山很高。", "We climbed the mountain.|我们爬了山。"]
+    },
+    "river": {
+      "word": "river",
+      "phonetic": "/ˈrɪvə(r)/",
+      "translation": "n. 河；江",
+      "level": "basic",
+      "examples": ["The river is long.|这条河很长。", "We swam in the river.|我们在河里游泳。"]
+    },
+    "sea": {
+      "word": "sea",
+      "phonetic": "/siː/",
+      "translation": "n. 海；海洋",
+      "level": "basic",
+      "examples": ["The sea is blue.|大海是蓝色的。", "I love the sea.|我爱大海。"]
+    },
+    "beach": {
+      "word": "beach",
+      "phonetic": "/biːtʃ/",
+      "translation": "n. 海滩；v. 搁浅",
+      "level": "basic",
+      "examples": ["Let's go to the beach.|我们去海滩吧。", "The beach is crowded.|海滩很拥挤。"]
+    },
+    "city": {
+      "word": "city",
+      "phonetic": "/ˈsɪti/",
+      "translation": "n. 城市；都市",
+      "level": "basic",
+      "examples": ["I live in a big city.|我住在大城市。", "New York is a famous city.|纽约是著名的城市。"]
+    },
+    "country": {
+      "word": "country",
+      "phonetic": "/ˈkʌntri/",
+      "translation": "n. 国家；乡村",
+      "level": "basic",
+      "examples": ["Which country are you from?|你来自哪个国家？", "I prefer the country to the city.|我喜欢乡村胜过城市。"]
+    },
+    "world": {
+      "word": "world",
+      "phonetic": "/wɜːld/",
+      "translation": "n. 世界；地球",
+      "level": "basic",
+      "examples": ["The world is beautiful.|世界很美丽。", "He traveled around the world.|他环游了世界。"]
+    },
+    "people": {
+      "word": "people",
+      "phonetic": "/ˈpiːpl/",
+      "translation": "n. 人；人们；民族",
+      "level": "basic",
+      "examples": ["Many people are here.|很多人在这里。", "The Chinese are a great people.|中华民族是伟大的民族。"]
+    },
+    "child": {
+      "word": "child",
+      "phonetic": "/tʃaɪld/",
+      "translation": "n. 孩子；儿童",
+      "level": "basic",
+      "examples": ["The child is playing.|孩子在玩。", "Children need love.|孩子需要爱。"]
+    },
+    "children": {
+      "word": "children",
+      "phonetic": "/ˈtʃɪldrən/",
+      "translation": "n. 孩子们（child的复数）",
+      "level": "basic",
+      "examples": ["The children are happy.|孩子们很开心。", "Children like to play.|孩子们喜欢玩。"]
+    },
+    "parent": {
+      "word": "parent",
+      "phonetic": "/ˈpeərənt/",
+      "translation": "n. 父（母）亲",
+      "level": "basic",
+      "examples": ["My parents are kind.|我的父母很和蔼。", "Being a parent is hard.|做父母很难。"]
+    },
+    "mother": {
+      "word": "mother",
+      "phonetic": "/ˈmʌðə(r)/",
+      "translation": "n. 母亲；v. 像母亲般照顾",
+      "level": "basic",
+      "examples": ["I love my mother.|我爱我的母亲。", "She mothered the orphan.|她像母亲般照顾那个孤儿。"]
+    },
+    "father": {
+      "word": "father",
+      "phonetic": "/ˈfɑːðə(r)/",
+      "translation": "n. 父亲；创始人",
+      "level": "basic",
+      "examples": ["My father is a doctor.|我父亲是医生。", "He is the father of modern physics.|他是现代物理学之父。"]
+    },
+    "brother": {
+      "word": "brother",
+      "phonetic": "/ˈbrʌðə(r)/",
+      "translation": "n. 兄弟；同胞",
+      "level": "basic",
+      "examples": ["I have an older brother.|我有一个哥哥。", "We are brothers.|我们是兄弟。"]
+    },
+    "sister": {
+      "word": "sister",
+      "phonetic": "/ˈsɪstə(r)/",
+      "translation": "n. 姐妹；护士",
+      "level": "basic",
+      "examples": ["She is my sister.|她是我的姐妹。", "The sister helped the patient.|护士帮助了病人。"]
+    },
+    "name": {
+      "word": "name",
+      "phonetic": "/neɪm/",
+      "translation": "n. 名字；v. 命名",
+      "level": "basic",
+      "examples": ["What's your name?|你叫什么名字？", "They named the baby Tom.|他们给婴儿取名汤姆。"]
+    },
+    "live": {
+      "word": "live",
+      "phonetic": "/lɪv/",
+      "translation": "v. 生活；居住；adj. 现场的",
+      "level": "basic",
+      "examples": ["I live in Beijing.|我住在北京。", "This is a live broadcast.|这是现场直播。"]
+    },
+    "life": {
+      "word": "life",
+      "phonetic": "/laɪf/",
+      "translation": "n. 生命；生活；一生",
+      "level": "basic",
+      "examples": ["Life is beautiful.|生活是美好的。", "He lived a long life.|他活了很久。"]
+    },
+    "die": {
+      "word": "die",
+      "phonetic": "/daɪ/",
+      "translation": "v. 死亡；消失",
+      "level": "basic",
+      "examples": ["Plants die without water.|植物没有水会死。", "The wind died down.|风渐渐停了。"]
+    },
+    "death": {
+      "word": "death",
+      "phonetic": "/deθ/",
+      "translation": "n. 死亡；毁灭",
+      "level": "basic",
+      "examples": ["Death is a part of life.|死亡是生命的一部分。", "The accident resulted in three deaths.|事故导致三人死亡。"]
+    },
+    "health": {
+      "word": "health",
+      "phonetic": "/helθ/",
+      "translation": "n. 健康；卫生",
+      "level": "basic",
+      "examples": ["Health is wealth.|健康就是财富。", "Smoking is bad for your health.|吸烟有害健康。"]
+    },
+    "doctor": {
+      "word": "doctor",
+      "phonetic": "/ˈdɒktə(r)/",
+      "translation": "n. 医生；博士",
+      "level": "basic",
+      "examples": ["I need to see a doctor.|我需要看医生。", "He is a doctor of philosophy.|他是哲学博士。"]
+    },
+    "hospital": {
+      "word": "hospital",
+      "phonetic": "/ˈhɒspɪtl/",
+      "translation": "n. 医院",
+      "level": "basic",
+      "examples": ["She works at a hospital.|她在医院工作。", "He was taken to hospital.|他被送往医院。"]
+    },
+    "medicine": {
+      "word": "medicine",
+      "phonetic": "/ˈmedsn/",
+      "translation": "n. 药；医学",
+      "level": "basic",
+      "examples": ["Take this medicine three times a day.|这药一天吃三次。", "She studies medicine.|她学医学。"]
+    },
+    "money": {
+      "word": "money",
+      "phonetic": "/ˈmʌni/",
+      "translation": "n. 钱；货币",
+      "level": "basic",
+      "examples": ["Time is money.|时间就是金钱。", "I don't have much money.|我没有很多钱。"]
+    },
+    "price": {
+      "word": "price",
+      "phonetic": "/praɪs/",
+      "translation": "n. 价格；代价",
+      "level": "basic",
+      "examples": ["What's the price?|价格是多少？", "He paid a high price for his mistake.|他为错误付出了高昂代价。"]
+    },
+    "buy": {
+      "word": "buy",
+      "phonetic": "/baɪ/",
+      "translation": "v. 买；购买",
+      "level": "basic",
+      "examples": ["I want to buy a book.|我想买一本书。", "Money can't buy happiness.|金钱买不到幸福。"]
+    },
+    "sell": {
+      "word": "sell",
+      "phonetic": "/sel/",
+      "translation": "v. 卖；销售",
+      "level": "basic",
+      "examples": ["They sell fruit.|他们卖水果。", "The house is for sale.|这房子待售。"]
+    },
+    "shop": {
+      "word": "shop",
+      "phonetic": "/ʃɒp/",
+      "translation": "n. 商店；v. 购物",
+      "level": "basic",
+      "examples": ["Let's go to the shop.|我们去商店吧。", "I like to shop online.|我喜欢网上购物。"]
+    },
+    "store": {
+      "word": "store",
+      "phonetic": "/stɔː(r)/",
+      "translation": "n. 商店；仓库；v. 储存",
+      "level": "basic",
+      "examples": ["The store is open.|商店开着。", "We store food in the fridge.|我们把食物储存在冰箱里。"]
+    },
+    "market": {
+      "word": "market",
+      "phonetic": "/ˈmɑːkɪt/",
+      "translation": "n. 市场；集市",
+      "level": "basic",
+      "examples": ["I went to the market.|我去了市场。", "The stock market crashed.|股市崩盘了。"]
+    },
+    "pay": {
+      "word": "pay",
+      "phonetic": "/peɪ/",
+      "translation": "v. 支付；n. 工资",
+      "level": "basic",
+      "examples": ["I'll pay for dinner.|我来付晚餐的钱。", "The pay is good.|工资不错。"]
+    },
+    "cost": {
+      "word": "cost",
+      "phonetic": "/kɒst/",
+      "translation": "n. 成本；费用；v. 花费",
+      "level": "basic",
+      "examples": ["What's the cost?|费用是多少？", "It costs ten dollars.|这花费十美元。"]
+    },
+    "cheap": {
+      "word": "cheap",
+      "phonetic": "/tʃiːp/",
+      "translation": "adj. 便宜的；劣质的",
+      "level": "basic",
+      "examples": ["This is cheap.|这很便宜。", "Cheap things are not good.|便宜没好货。"]
+    },
+    "expensive": {
+      "word": "expensive",
+      "phonetic": "/ɪkˈspensɪv/",
+      "translation": "adj. 昂贵的",
+      "level": "basic",
+      "examples": ["This is too expensive.|这太贵了。", "Cars are expensive.|汽车很贵。"]
+    },
+    "color": {
+      "word": "color",
+      "phonetic": "/ˈkʌlə(r)/",
+      "translation": "n. 颜色；v. 着色",
+      "level": "basic",
+      "examples": ["What color is it?|它是什么颜色？", "The child is coloring the picture.|孩子在给画上色。"]
+    },
+    "red": {
+      "word": "red",
+      "phonetic": "/red/",
+      "translation": "adj. 红色的；n. 红色",
+      "level": "basic",
+      "examples": ["The apple is red.|苹果是红色的。", "I like red.|我喜欢红色。"]
+    },
+    "blue": {
+      "word": "blue",
+      "phonetic": "/bluː/",
+      "translation": "adj. 蓝色的；n. 蓝色；忧郁的",
+      "level": "basic",
+      "examples": ["The sky is blue.|天空是蓝色的。", "I feel blue today.|我今天感到忧郁。"]
+    },
+    "green": {
+      "word": "green",
+      "phonetic": "/ɡriːn/",
+      "translation": "adj. 绿色的；n. 绿色",
+      "level": "basic",
+      "examples": ["The grass is green.|草是绿色的。", "Green represents nature.|绿色代表自然。"]
+    },
+    "yellow": {
+      "word": "yellow",
+      "phonetic": "/ˈjeləʊ/",
+      "translation": "adj. 黄色的；n. 黄色",
+      "level": "basic",
+      "examples": ["The banana is yellow.|香蕉是黄色的。", "Yellow is a bright color.|黄色是明亮的颜色。"]
+    },
+    "black": {
+      "word": "black",
+      "phonetic": "/blæk/",
+      "translation": "adj. 黑色的；n. 黑色",
+      "level": "basic",
+      "examples": ["The cat is black.|猫是黑色的。", "Black is my favorite color.|黑色是我最喜欢的颜色。"]
+    },
+    "white": {
+      "word": "white",
+      "phonetic": "/waɪt/",
+      "translation": "adj. 白色的；n. 白色",
+      "level": "basic",
+      "examples": ["The snow is white.|雪是白色的。", "She wore a white dress.|她穿了一条白裙子。"]
+    },
+    "hot": {
+      "word": "hot",
+      "phonetic": "/hɒt/",
+      "translation": "adj. 热的；辣的；热门的",
+      "level": "basic",
+      "examples": ["It's hot today.|今天很热。", "This food is too hot.|这食物太辣了。"]
+    },
+    "cold": {
+      "word": "cold",
+      "phonetic": "/kəʊld/",
+      "translation": "adj. 冷的；冷淡的；n. 感冒",
+      "level": "basic",
+      "examples": ["It's cold outside.|外面很冷。", "I have a cold.|我感冒了。"]
+    },
+    "warm": {
+      "word": "warm",
+      "phonetic": "/wɔːm/",
+      "translation": "adj. 温暖的；热情的",
+      "level": "basic",
+      "examples": ["The weather is warm.|天气很温暖。", "She gave me a warm welcome.|她热情地欢迎我。"]
+    },
+    "cool": {
+      "word": "cool",
+      "phonetic": "/kuːl/",
+      "translation": "adj. 凉爽的；酷的；v. 冷却",
+      "level": "basic",
+      "examples": ["It's cool in autumn.|秋天很凉爽。", "That's cool!|太酷了！"]
+    },
+    "dry": {
+      "word": "dry",
+      "phonetic": "/draɪ/",
+      "translation": "adj. 干的；干燥的；v. 使干燥",
+      "level": "basic",
+      "examples": ["The clothes are dry.|衣服干了。", "Dry your hands.|擦干你的手。"]
+    },
+    "wet": {
+      "word": "wet",
+      "phonetic": "/wet/",
+      "translation": "adj. 湿的；下雨的",
+      "level": "basic",
+      "examples": ["The ground is wet.|地面是湿的。", "It's wet outside.|外面下雨了。"]
+    },
+    "clean": {
+      "word": "clean",
+      "phonetic": "/kliːn/",
+      "translation": "adj. 干净的；v. 打扫",
+      "level": "basic",
+      "examples": ["The room is clean.|房间很干净。", "I need to clean my room.|我需要打扫房间。"]
+    },
+    "dirty": {
+      "word": "dirty",
+      "phonetic": "/ˈdɜːti/",
+      "translation": "adj. 脏的；下流的",
+      "level": "basic",
+      "examples": ["Your shoes are dirty.|你的鞋很脏。", "Don't use dirty words.|不要说脏话。"]
+    },
+    "easy": {
+      "word": "easy",
+      "phonetic": "/ˈiːzi/",
+      "translation": "adj. 容易的；舒适的",
+      "level": "basic",
+      "examples": ["This is easy.|这很容易。", "Take it easy.|放轻松。"]
+    },
+    "difficult": {
+      "word": "difficult",
+      "phonetic": "/ˈdɪfɪkəlt/",
+      "translation": "adj. 困难的；难相处的",
+      "level": "basic",
+      "examples": ["This is difficult.|这很难。", "He's a difficult person.|他是个难相处的人。"]
+    },
+    "hard": {
+      "word": "hard",
+      "phonetic": "/hɑːd/",
+      "translation": "adj. 硬的；困难的；adv. 努力地",
+      "level": "basic",
+      "examples": ["This stone is hard.|这块石头很硬。", "Study hard.|努力学习。"]
+    },
+    "soft": {
+      "word": "soft",
+      "phonetic": "/sɒft/",
+      "translation": "adj. 软的；柔和的",
+      "level": "basic",
+      "examples": ["The pillow is soft.|枕头很软。", "She spoke in a soft voice.|她用柔和的声音说话。"]
+    },
+    "fast": {
+      "word": "fast",
+      "phonetic": "/fɑːst/",
+      "translation": "adj. 快的；adv. 快地",
+      "level": "basic",
+      "examples": ["He runs fast.|他跑得很快。", "This is a fast car.|这是辆快车。"]
+    },
+    "slow": {
+      "word": "slow",
+      "phonetic": "/sləʊ/",
+      "translation": "adj. 慢的；v. 放慢",
+      "level": "basic",
+      "examples": ["The turtle is slow.|乌龟很慢。", "Slow down!|慢下来！"]
+    },
+    "early": {
+      "word": "early",
+      "phonetic": "/ˈɜːli/",
+      "translation": "adj. 早的；adv. 早地",
+      "level": "basic",
+      "examples": ["I wake up early.|我醒得很早。", "The early bird catches the worm.|早起的鸟儿有虫吃。"]
+    },
+    "late": {
+      "word": "late",
+      "phonetic": "/leɪt/",
+      "translation": "adj. 迟的；晚的；已故的",
+      "level": "basic",
+      "examples": ["I'm sorry I'm late.|对不起我迟到了。", "He worked late.|他工作到很晚。"]
+    },
+    "first": {
+      "word": "first",
+      "phonetic": "/fɜːst/",
+      "translation": "adj. 第一的；adv. 首先",
+      "level": "basic",
+      "examples": ["This is my first time.|这是我的第一次。", "First, let's introduce ourselves.|首先，让我们自我介绍。"]
+    },
+    "last": {
+      "word": "last",
+      "phonetic": "/lɑːst/",
+      "translation": "adj. 最后的；adv. 最后；v. 持续",
+      "level": "basic",
+      "examples": ["This is the last one.|这是最后一个。", "The movie lasts two hours.|电影持续两小时。"]
+    },
+    "next": {
+      "word": "next",
+      "phonetic": "/nekst/",
+      "translation": "adj. 下一个的；adv. 接下来",
+      "level": "basic",
+      "examples": ["What's next?|接下来是什么？", "See you next week.|下周见。"]
+    },
+    "right": {
+      "word": "right",
+      "phonetic": "/raɪt/",
+      "translation": "adj. 正确的；右边的；n. 权利",
+      "level": "basic",
+      "examples": ["You are right.|你是对的。", "Turn right.|向右转。", "Everyone has rights.|每个人都有权利。"]
+    },
+    "left": {
+      "word": "left",
+      "phonetic": "/left/",
+      "translation": "adj. 左边的；剩下的；n. 左边",
+      "level": "basic",
+      "examples": ["Turn left.|向左转。", "No food is left.|没有食物剩下了。"]
+    },
+    "up": {
+      "word": "up",
+      "phonetic": "/ʌp/",
+      "translation": "adv. 向上；prep. 向上",
+      "level": "basic",
+      "examples": ["Stand up.|站起来。", "Look up.|向上看。"]
+    },
+    "down": {
+      "word": "down",
+      "phonetic": "/daʊn/",
+      "translation": "adv. 向下；prep. 沿着",
+      "level": "basic",
+      "examples": ["Sit down.|坐下。", "Walk down the street.|沿着街道走。"]
+    },
+    "on": {
+      "word": "on",
+      "phonetic": "/ɒn/",
+      "translation": "prep. 在...上；adv. 开着",
+      "level": "basic",
+      "examples": ["The book is on the table.|书在桌子上。", "Turn on the light.|开灯。"]
+    },
+    "off": {
+      "word": "off",
+      "phonetic": "/ɒf/",
+      "translation": "adv. 离开；关掉；prep. 离开",
+      "level": "basic",
+      "examples": ["Turn off the TV.|关掉电视。", "The meeting is off.|会议取消了。"]
+    },
+    "in": {
+      "word": "in",
+      "phonetic": "/ɪn/",
+      "translation": "prep. 在...里；adv. 在里面",
+      "level": "basic",
+      "examples": ["Come in.|进来。", "I'm in the room.|我在房间里。"]
+    },
+    "out": {
+      "word": "out",
+      "phonetic": "/aʊt/",
+      "translation": "adv. 出去；在外面",
+      "level": "basic",
+      "examples": ["Go out.|出去。", "He's out.|他出去了。"]
+    },
+    "at": {
+      "word": "at",
+      "phonetic": "/æt/",
+      "translation": "prep. 在；向；以",
+      "level": "basic",
+      "examples": ["I'm at home.|我在家。", "Look at me.|看着我。"]
+    },
+    "by": {
+      "word": "by",
+      "phonetic": "/baɪ/",
+      "translation": "prep. 通过；在...旁边；被",
+      "level": "basic",
+      "examples": ["Go by bus.|乘公交车去。", "Stand by me.|站在我旁边。"]
+    },
+    "with": {
+      "word": "with",
+      "phonetic": "/wɪð/",
+      "translation": "prep. 和...一起；用；具有",
+      "level": "basic",
+      "examples": ["Come with me.|跟我来。", "Cut it with a knife.|用刀切。"]
+    },
+    "without": {
+      "word": "without",
+      "phonetic": "/wɪˈðaʊt/",
+      "translation": "prep. 没有；不用",
+      "level": "basic",
+      "examples": ["I can't live without you.|没有你我活不下去。", "Do it without help.|不用帮助做这件事。"]
+    },
+    "for": {
+      "word": "for",
+      "phonetic": "/fɔː(r)/",
+      "translation": "prep. 为了；对于；持续",
+      "level": "basic",
+      "examples": ["This is for you.|这是给你的。", "I've lived here for ten years.|我在这里住了十年。"]
+    },
+    "from": {
+      "word": "from",
+      "phonetic": "/frɒm/",
+      "translation": "prep. 从；来自；由于",
+      "level": "basic",
+      "examples": ["I'm from China.|我来自中国。", "From Monday to Friday.|从周一到周五。"]
+    },
+    "to": {
+      "word": "to",
+      "phonetic": "/tuː/",
+      "translation": "prep. 到；向；对于",
+      "level": "basic",
+      "examples": ["Go to school.|去上学。", "Nice to meet you.|很高兴认识你。"]
+    },
+    "about": {
+      "word": "about",
+      "phonetic": "/əˈbaʊt/",
+      "translation": "prep. 关于；大约；adv. 到处",
+      "level": "basic",
+      "examples": ["Tell me about it.|告诉我关于它的事。", "It's about five o'clock.|大约五点钟。"]
+    },
+    "into": {
+      "word": "into",
+      "phonetic": "/ˈɪntuː/",
+      "translation": "prep. 进入；变成",
+      "level": "basic",
+      "examples": ["Come into the room.|进入房间。", "The frog turned into a prince.|青蛙变成了王子。"]
+    },
+    "over": {
+      "word": "over",
+      "phonetic": "/ˈəʊvə(r)/",
+      "translation": "prep. 在...上方；越过；结束",
+      "level": "basic",
+      "examples": ["The lamp is over the table.|灯在桌子上方。", "The game is over.|游戏结束了。"]
+    },
+    "before": {
+      "word": "before",
+      "phonetic": "/bɪˈfɔː(r)/",
+      "translation": "prep. 在...之前；conj. 在...之前",
+      "level": "basic",
+      "examples": ["Before dinner.|晚饭前。", "Think before you act.|三思而后行。"]
+    },
+    "after": {
+      "word": "after",
+      "phonetic": "/ˈɑːftə(r)/",
+      "translation": "prep. 在...之后；conj. 在...之后",
+      "level": "basic",
+      "examples": ["After school.|放学后。", "After you.|您先请。"]
+    },
+    "above": {
+      "word": "above",
+      "phonetic": "/əˈbʌv/",
+      "translation": "prep. 在...上方；超过",
+      "level": "basic",
+      "examples": ["The picture is above the sofa.|画在沙发上。", "Above all, be honest.|最重要的是诚实。"]
+    },
+    "below": {
+      "word": "below",
+      "phonetic": "/bɪˈləʊ/",
+      "translation": "prep. 在...下方；低于",
+      "level": "basic",
+      "examples": ["See the note below.|请看下面的注释。", "Temperature is below zero.|温度在零度以下。"]
+    },
+    "between": {
+      "word": "between",
+      "phonetic": "/bɪˈtwiːn/",
+      "translation": "prep. 在...之间",
+      "level": "basic",
+      "examples": ["Between you and me.|在你我之间。", "The shop is between the bank and the post office.|商店在银行和邮局之间。"]
+    },
+    "through": {
+      "word": "through",
+      "phonetic": "/θruː/",
+      "translation": "prep. 穿过；通过；adv. 从头到尾",
+      "level": "basic",
+      "examples": ["Walk through the door.|穿过门。", "I read the book through.|我读完了这本书。"]
+    },
+    "during": {
+      "word": "during",
+      "phonetic": "/ˈdjʊərɪŋ/",
+      "translation": "prep. 在...期间",
+      "level": "basic",
+      "examples": ["During the day.|在白天期间。", "Don't talk during the movie.|看电影时不要说话。"]
+    },
+    "until": {
+      "word": "until",
+      "phonetic": "/ənˈtɪl/",
+      "translation": "prep. 直到；conj. 直到...为止",
+      "level": "basic",
+      "examples": ["Wait until tomorrow.|等到明天。", "I won't leave until you come.|你来之前我不会离开。"]
+    },
+    "because": {
+      "word": "because",
+      "phonetic": "/bɪˈkɒz/",
+      "translation": "conj. 因为",
+      "level": "basic",
+      "examples": ["Because of you.|因为你。", "I stayed home because it rained.|我待在家里因为下雨了。"]
+    },
+    "if": {
+      "word": "if",
+      "phonetic": "/ɪf/",
+      "translation": "conj. 如果；是否",
+      "level": "basic",
+      "examples": ["If it rains.|如果下雨。", "I don't know if he will come.|我不知道他是否会来。"]
+    },
+    "when": {
+      "word": "when",
+      "phonetic": "/wen/",
+      "translation": "conj. 当...时；adv. 什么时候",
+      "level": "basic",
+      "examples": ["When I was young.|当我年轻时。", "When will you come?|你什么时候来？"]
+    },
+    "where": {
+      "word": "where",
+      "phonetic": "/weə(r)/",
+      "translation": "adv. 在哪里；conj. 在...地方",
+      "level": "basic",
+      "examples": ["Where are you?|你在哪里？", "This is where I live.|这就是我住的地方。"]
+    },
+    "why": {
+      "word": "why",
+      "phonetic": "/waɪ/",
+      "translation": "adv. 为什么；int. 哎呀",
+      "level": "basic",
+      "examples": ["Why are you late?|你为什么迟到？", "Why, that's amazing!|哎呀，太神奇了！"]
+    },
+    "how": {
+      "word": "how",
+      "phonetic": "/haʊ/",
+      "translation": "adv. 如何；多么",
+      "level": "basic",
+      "examples": ["How are you?|你好吗？", "How beautiful!|多么美啊！"]
+    },
+    "what": {
+      "word": "what",
+      "phonetic": "/wɒt/",
+      "translation": "pron. 什么；adj. 多么",
+      "level": "basic",
+      "examples": ["What is this?|这是什么？", "What a surprise!|多么惊喜啊！"]
+    },
+    "who": {
+      "word": "who",
+      "phonetic": "/huː/",
+      "translation": "pron. 谁",
+      "level": "basic",
+      "examples": ["Who are you?|你是谁？", "The man who spoke.|说话的那个人。"]
+    },
+    "which": {
+      "word": "which",
+      "phonetic": "/wɪtʃ/",
+      "translation": "pron. 哪一个；adj. 哪一个",
+      "level": "basic",
+      "examples": ["Which one do you want?|你想要哪一个？", "The book which is red.|那本红色的书。"]
+    },
+    "all": {
+      "word": "all",
+      "phonetic": "/ɔːl/",
+      "translation": "adj. 所有的；pron. 全部；adv. 完全",
+      "level": "basic",
+      "examples": ["All students.|所有学生。", "That's all.|就这样。", "I'm all alone.|我完全一个人。"]
+    },
+    "some": {
+      "word": "some",
+      "phonetic": "/sʌm/",
+      "translation": "pron. 一些；adj. 一些的",
+      "level": "basic",
+      "examples": ["I have some time.|我有一些时间。", "Would you like some tea?|你想喝点茶吗？"]
+    },
+    "any": {
+      "word": "any",
+      "phonetic": "/ˈeni/",
+      "translation": "pron. 任何；adj. 任何的；adv. 丝毫",
+      "level": "basic",
+      "examples": ["Do you have any questions?|你有任何问题吗？", "I don't have any money.|我没有任何钱。"]
+    },
+    "many": {
+      "word": "many",
+      "phonetic": "/ˈmeni/",
+      "translation": "adj. 许多的；pron. 许多",
+      "level": "basic",
+      "examples": ["Many people.|很多人。", "How many?|多少？"]
+    },
+    "much": {
+      "word": "much",
+      "phonetic": "/mʌtʃ/",
+      "translation": "adj. 许多的；adv. 非常；pron. 许多",
+      "level": "basic",
+      "examples": ["Too much.|太多了。", "Thank you very much.|非常感谢你。"]
+    },
+    "more": {
+      "word": "more",
+      "phonetic": "/mɔː(r)/",
+      "translation": "adj. 更多的；adv. 更；pron. 更多",
+      "level": "basic",
+      "examples": ["I need more time.|我需要更多时间。", "More or less.|或多或少。"]
+    },
+    "most": {
+      "word": "most",
+      "phonetic": "/məʊst/",
+      "translation": "adj. 最多的；adv. 最；pron. 大多数",
+      "level": "basic",
+      "examples": ["Most people agree.|大多数人同意。", "This is the most important.|这是最重要的。"]
+    },
+    "other": {
+      "word": "other",
+      "phonetic": "/ˈʌðə(r)/",
+      "translation": "adj. 其他的；pron. 另一个",
+      "level": "basic",
+      "examples": ["The other day.|前几天。", "Each other.|彼此。"]
+    },
+    "another": {
+      "word": "another",
+      "phonetic": "/əˈnʌðə(r)/",
+      "translation": "adj. 另一个的；pron. 另一个",
+      "level": "basic",
+      "examples": ["Another one.|另一个。", "One another.|互相。"]
+    },
+    "such": {
+      "word": "such",
+      "phonetic": "/sʌtʃ/",
+      "translation": "adj. 这样的；如此的；pron. 这样的人/物",
+      "level": "basic",
+      "examples": ["Such a beautiful day.|如此美好的一天。", "Such is life.|这就是生活。"]
+    },
+    "only": {
+      "word": "only",
+      "phonetic": "/ˈəʊnli/",
+      "translation": "adv. 只有；仅仅；adj. 唯一的",
+      "level": "basic",
+      "examples": ["I only have five dollars.|我只有五美元。", "You are my only friend.|你是我唯一的朋友。"]
+    },
+    "also": {
+      "word": "also",
+      "phonetic": "/ˈɔːlsəʊ/",
+      "translation": "adv. 也；而且",
+      "level": "basic",
+      "examples": ["I also like it.|我也喜欢它。", "She is also coming.|她也要来。"]
+    },
+    "very": {
+      "word": "very",
+      "phonetic": "/ˈveri/",
+      "translation": "adv. 非常；很；adj. 正是的",
+      "level": "basic",
+      "examples": ["Very good.|非常好。", "This is the very book I need.|这正是我需要的书。"]
+    },
+    "just": {
+      "word": "just",
+      "phonetic": "/dʒʌst/",
+      "translation": "adv. 刚刚；只是；正好",
+      "level": "basic",
+      "examples": ["I just arrived.|我刚到。", "Just a minute.|等一下。"]
+    },
+    "already": {
+      "word": "already",
+      "phonetic": "/ɔːlˈredi/",
+      "translation": "adv. 已经",
+      "level": "basic",
+      "examples": ["I've already eaten.|我已经吃了。", "Are you already here?|你已经在这里了吗？"]
+    },
+    "still": {
+      "word": "still",
+      "phonetic": "/stɪl/",
+      "translation": "adv. 仍然；还；adj. 静止的",
+      "level": "basic",
+      "examples": ["I'm still here.|我还在这里。", "Please stand still.|请站好别动。"]
+    },
+    "yet": {
+      "word": "yet",
+      "phonetic": "/jet/",
+      "translation": "adv. 还；但是；conj. 然而",
+      "level": "basic",
+      "examples": ["Not yet.|还没有。", "Strange, yet true.|奇怪，但是真的。"]
+    },
+    "even": {
+      "word": "even",
+      "phonetic": "/ˈiːvn/",
+      "translation": "adv. 甚至；adj. 平坦的；偶数的",
+      "level": "basic",
+      "examples": ["Even I can do it.|甚至我都能做。", "The road is even.|路很平坦。"]
+    },
+    "here": {
+      "word": "here",
+      "phonetic": "/hɪə(r)/",
+      "translation": "adv. 这里；int. 到",
+      "level": "basic",
+      "examples": ["Come here.|来这里。", "Here you are.|给你。"]
+    },
+    "there": {
+      "word": "there",
+      "phonetic": "/ðeə(r)/",
+      "translation": "adv. 那里；int. 好啦",
+      "level": "basic",
+      "examples": ["Go there.|去那里。", "There, there.|好啦，好啦。"]
+    },
+    "everywhere": {
+      "word": "everywhere",
+      "phonetic": "/ˈevriweə(r)/",
+      "translation": "adv. 到处；处处",
+      "level": "basic",
+      "examples": ["I've looked everywhere.|我到处都找过了。", "Flowers are everywhere.|到处都是花。"]
+    },
+    "somewhere": {
+      "word": "somewhere",
+      "phonetic": "/ˈsʌmweə(r)/",
+      "translation": "adv. 在某处；n. 某个地方",
+      "level": "basic",
+      "examples": ["Let's go somewhere fun.|我们去个好玩的地方吧。", "I left it somewhere.|我把它落在某处了。"]
+    },
+    "nowhere": {
+      "word": "nowhere",
+      "phonetic": "/ˈnəʊweə(r)/",
+      "translation": "adv. 无处；n. 无处",
+      "level": "basic",
+      "examples": ["I have nowhere to go.|我无处可去。", "Nowhere else.|没有别的地方。"]
+    },
+    "away": {
+      "word": "away",
+      "phonetic": "/əˈweɪ/",
+      "translation": "adv. 离开；远离",
+      "level": "basic",
+      "examples": ["Go away!|走开！", "Far away.|很远。"]
+    },
+    "back": {
+      "word": "back",
+      "phonetic": "/bæk/",
+      "translation": "n. 后面；背部；adv. 向后；v. 支持",
+      "level": "basic",
+      "examples": ["Come back.|回来。", "My back hurts.|我的背疼。", "I back your decision.|我支持你的决定。"]
+    },
+    "forward": {
+      "word": "forward",
+      "phonetic": "/ˈfɔːwəd/",
+      "translation": "adv. 向前；adj. 向前的；v. 转发",
+      "level": "basic",
+      "examples": ["Move forward.|向前移动。", "Look forward to it.|期待它。"]
+    },
+    "together": {
+      "word": "together",
+      "phonetic": "/təˈɡeðə(r)/",
+      "translation": "adv. 一起；同时",
+      "level": "basic",
+      "examples": ["Let's work together.|让我们一起工作。", "Together we can do it.|我们一起能做到。"]
+    },
+    "apart": {
+      "word": "apart",
+      "phonetic": "/əˈpɑːt/",
+      "translation": "adv. 分开；分离；adj. 分开的",
+      "level": "basic",
+      "examples": ["Keep them apart.|把它们分开。", "We are worlds apart.|我们天差地别。"]
+    },
+    "alone": {
+      "word": "alone",
+      "phonetic": "/əˈləʊn/",
+      "translation": "adj. 独自的；adv. 独自地",
+      "level": "basic",
+      "examples": ["I am alone.|我一个人。", "Leave me alone.|让我一个人静静。"]
+    },
+    "really": {
+      "word": "really",
+      "phonetic": "/ˈriːəli/",
+      "translation": "adv. 真正地；确实；真的吗",
+      "level": "basic",
+      "examples": ["I really like it.|我真的很喜欢它。", "Really?|真的吗？"]
+    },
+    "maybe": {
+      "word": "maybe",
+      "phonetic": "/ˈmeɪbi/",
+      "translation": "adv. 也许；可能",
+      "level": "basic",
+      "examples": ["Maybe tomorrow.|也许明天。", "Maybe you're right.|也许你是对的。"]
+    },
+    "perhaps": {
+      "word": "perhaps",
+      "phonetic": "/pəˈhæps/",
+      "translation": "adv. 也许；可能",
+      "level": "basic",
+      "examples": ["Perhaps later.|也许稍后。", "Perhaps you should rest.|也许你应该休息。"]
+    },
+    "probably": {
+      "word": "probably",
+      "phonetic": "/ˈprɒbəbli/",
+      "translation": "adv. 可能；大概",
+      "level": "basic",
+      "examples": ["It will probably rain.|可能会下雨。", "He's probably right.|他可能是对的。"]
+    },
+    "almost": {
+      "word": "almost",
+      "phonetic": "/ˈɔːlməʊst/",
+      "translation": "adv. 几乎；差不多",
+      "level": "basic",
+      "examples": ["I'm almost done.|我快做完了。", "Almost there.|快到了。"]
+    },
+    "quite": {
+      "word": "quite",
+      "phonetic": "/kwaɪt/",
+      "translation": "adv. 相当；很；完全",
+      "level": "basic",
+      "examples": ["Quite good.|相当好。", "That's quite right.|那完全正确。"]
+    },
+    "rather": {
+      "word": "rather",
+      "phonetic": "/ˈrɑːðə(r)/",
+      "translation": "adv. 相当；宁愿；更确切地说",
+      "level": "basic",
+      "examples": ["Rather good.|相当好。", "I'd rather stay home.|我宁愿待在家里。"]
+    },
+    "enough": {
+      "word": "enough",
+      "phonetic": "/ɪˈnʌf/",
+      "translation": "adj. 足够的；adv. 足够地；pron. 足够",
+      "level": "basic",
+      "examples": ["That's enough.|够了。", "I have enough money.|我有足够的钱。"]
+    },
+    "almost": {
+      "word": "almost",
+      "phonetic": "/ˈɔːlməʊst/",
+      "translation": "adv. 几乎；差不多",
+      "level": "basic",
+      "examples": ["I'm almost there.|我快到了。", "It's almost time.|差不多到时间了。"]
+    },
+    "especially": {
+      "word": "especially",
+      "phonetic": "/ɪˈspeʃəli/",
+      "translation": "adv. 尤其；特别",
+      "level": "intermediate",
+      "examples": ["I love fruits, especially apples.|我喜欢水果，尤其是苹果。", "It's especially important.|这特别重要。"]
+    },
+    "usually": {
+      "word": "usually",
+      "phonetic": "/ˈjuːʒuəli/",
+      "translation": "adv. 通常；经常",
+      "level": "basic",
+      "examples": ["I usually get up early.|我通常早起。", "It usually rains in summer.|夏天通常下雨。"]
+    },
+    "sometimes": {
+      "word": "sometimes",
+      "phonetic": "/ˈsʌmtaɪmz/",
+      "translation": "adv. 有时；偶尔",
+      "level": "basic",
+      "examples": ["Sometimes I walk to work.|有时我走路去上班。", "It sometimes snows here.|这里有时下雪。"]
+    },
+    "never": {
+      "word": "never",
+      "phonetic": "/ˈnevə(r)/",
+      "translation": "adv. 从不；绝不",
+      "level": "basic",
+      "examples": ["I never give up.|我从不放弃。", "Never say never.|绝不说绝不。"]
+    },
+    "always": {
+      "word": "always",
+      "phonetic": "/ˈɔːlweɪz/",
+      "translation": "adv. 总是；永远",
+      "level": "basic",
+      "examples": ["I always try my best.|我总是尽力而为。", "You are always in my heart.|你永远在我心中。"]
+    },
+    "often": {
+      "word": "often",
+      "phonetic": "/ˈɒfn/",
+      "translation": "adv. 经常；常常",
+      "level": "basic",
+      "examples": ["I often read books.|我经常读书。", "How often do you exercise?|你多久锻炼一次？"]
+    },
+    "again": {
+      "word": "again",
+      "phonetic": "/əˈɡen/",
+      "translation": "adv. 再；又",
+      "level": "basic",
+      "examples": ["Say it again.|再说一遍。", "I'll try again.|我会再试一次。"]
+    }
+  }
+}

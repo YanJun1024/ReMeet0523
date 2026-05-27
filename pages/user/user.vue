@@ -142,8 +142,8 @@ const toggleDarkMode = () => {
 
 const aboutUs = () => {
   uni.showModal({
-    title: '关于 TagWord',
-    content: 'TagWord 是一款标签式语言学习工具，帮助你通过 #标签 快速关联单词、笔记和词典释义。\n\n版本: 1.0.0',
+    title: '关于 MeetRe',
+    content: 'MeetRe 是一款标签式语言学习工具，帮助你通过 #标签 快速关联单词、笔记和词典释义。\n\n版本: 1.0.0',
     showCancel: false
   })
 }

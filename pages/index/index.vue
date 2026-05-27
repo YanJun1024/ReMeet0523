@@ -45,12 +45,12 @@
           <view class="menu-line medium"></view>
         </view>
       </view>
-      <text class="nav-title">ReMeet</text>
+      <text class="nav-title">MeetRe</text>
       <view class="nav-placeholder"></view>
     </view>
     
     <!-- 可滑动卡片区域（Swipe to Reveal） -->
-    <view class="card-section">
+    <view class="card-section" :style="cardHeightLocked ? { height: lockedCardHeight + 'px', flex: 'none' } : {}">
       <view class="swipe-container">
         <!-- 左滑 Reveal：笔记 action 背景 -->
         <view class="swipe-action-left" :style="{ opacity: swipeOffsetX < 0 ? Math.min(Math.abs(swipeOffsetX) / 100, 1) : 0 }">
@@ -131,26 +131,27 @@
             @blur="onInputBlur"
             @linechange="onLineChange"
           />
-        </view>
-        
-        <!-- 工具栏 -->
-        <view class="edit-toolbar">
-          <text class="toolbar-btn" @click.stop="insertHashtag">#</text>
-          <text class="toolbar-btn" @click.stop="insertOrderedList">1.</text>
-          <view class="toolbar-spacer"></view>
-          <button 
-            class="save-btn" 
-            :class="{ disabled: !hasValidTag }" 
-            :disabled="!hasValidTag"
-            @click.stop="saveNote"
-          >保存</button>
+          
+          <!-- 悬浮工具栏 -->
+          <view class="floating-toolbar">
+            <view class="toolbar-left">
+              <text class="toolbar-btn" @click.stop="insertHashtag">#</text>
+              <text class="toolbar-btn" @click.stop="insertOrderedList">1.</text>
+            </view>
+            <button 
+              class="save-btn" 
+              :class="{ disabled: !hasValidTag }" 
+              :disabled="!hasValidTag"
+              @click.stop="saveNote"
+            >保存</button>
+          </view>
         </view>
       </view>
       
       <!-- 品牌提示（键盘收起时显示） -->
       <view class="brand-hint" v-else key="hint" @click="onHintClick">
         <text class="hint-text">点击输入</text>
-        <text class="brand-watermark">TagWord</text>
+        <text class="brand-watermark">MeetRe</text>
       </view>
     </view>
     
@@ -487,6 +488,8 @@ import type { Tag, Note } from '@/stores'
 import type { SortMode } from '@/stores'
 import { fetchWordDict } from '@/utils/dictApi'
 import type { DictData } from '@/utils/dictApi'
+import { fetchLocalDict } from '@/utils/localDict'
+import type { LocalDictData } from '@/utils/localDict'
 
 // 声明 uni 全局变量
 declare const uni: any
@@ -501,6 +504,10 @@ const statusBarHeight = ref(44)
 const keyboardHeight = ref(0)
 const drawerContentHeight = ref(600)
 const darkMode = ref(false)
+
+// 卡片高度锁定状态
+const cardHeightLocked = ref(false)
+const lockedCardHeight = ref(0)
 
 // 输入区域状态
 const inputLineCount = ref(2)
@@ -595,11 +602,18 @@ watch(dictDrawerOpen, async (open: boolean) => {
     dictLoading.value = true
     dictError.value = false
     dictResult.value = null
-    const result = await fetchWordDict(store.currentTag)
-    if (result) {
-      dictResult.value = result
+    // 优先使用本地词典
+    const localResult = await fetchLocalDict(store.currentTag)
+    if (localResult) {
+      dictResult.value = localResult as any
     } else {
-      dictError.value = true
+      // 本地未找到，尝试在线词典（备用）
+      const onlineResult = await fetchWordDict(store.currentTag)
+      if (onlineResult) {
+        dictResult.value = onlineResult
+      } else {
+        dictError.value = true
+      }
     }
     dictLoading.value = false
   }
@@ -990,11 +1004,18 @@ const retryDict = async () => {
   dictLoading.value = true
   dictError.value = false
   dictResult.value = null
-  const result = await fetchWordDict(store.currentTag)
-  if (result) {
-    dictResult.value = result
+  // 优先使用本地词典
+  const localResult = await fetchLocalDict(store.currentTag)
+  if (localResult) {
+    dictResult.value = localResult as any
   } else {
-    dictError.value = true
+    // 本地未找到，尝试在线词典
+    const onlineResult = await fetchWordDict(store.currentTag)
+    if (onlineResult) {
+      dictResult.value = onlineResult
+    } else {
+      dictError.value = true
+    }
   }
   dictLoading.value = false
 }
@@ -1066,8 +1087,8 @@ const showHelp = () => {
 
 const aboutUs = () => {
   uni.showModal({
-    title: '关于 TagWord',
-    content: 'TagWord 是一款标签式语言学习工具，帮助你通过 #标签 快速关联单词、笔记和词典释义。\n\n版本: 1.0.0',
+    title: '关于 MeetRe',
+    content: 'MeetRe 是一款标签式语言学习工具，帮助你通过 #标签 快速关联单词、笔记和词典释义。\n\n版本: 1.0.0',
     showCancel: false
   })
 }
@@ -1092,7 +1113,22 @@ onLoad(() => {
   
   // 监听键盘高度变化
   uni.onKeyboardHeightChange((res: any) => {
-    keyboardHeight.value = res.height
+    const newHeight = res.height
+    
+    // 首次键盘弹出且高度大于0时，锁定卡片高度
+    if (newHeight > 0 && !cardHeightLocked.value) {
+      // 计算当前卡片高度并锁定
+      const query = uni.createSelectorQuery()
+      query.select('.card-section').boundingClientRect((rect: any) => {
+        if (rect) {
+          lockedCardHeight.value = rect.height
+          cardHeightLocked.value = true
+          console.log('[Layout] 卡片高度已锁定:', lockedCardHeight.value)
+        }
+      }).exec()
+    }
+    
+    keyboardHeight.value = newHeight
   })
 })
 
@@ -1173,19 +1209,22 @@ const skipGuide = () => {
 }
 
 .card-section {
-  padding: 4px 16px 16px;
-  flex-shrink: 0;
+  padding: 4px 16px 12px;
+  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   padding-top: 4px;
-  margin-bottom: 8px;
+  min-height: 150px;
+  max-height: 33vh;
 }
 
 .swipe-container {
   border-radius: 12px;
   overflow: hidden;
   position: relative;
+  flex: 1;
+  min-height: 0;
 }
 
 /* 左滑 Reveal 背景（笔记 - 蓝色） */
@@ -1237,7 +1276,7 @@ const skipGuide = () => {
   box-shadow:
     8px 8px 16px rgba(0, 0, 0, 0.05),
     -8px -8px 16px rgba(255, 255, 255, 0.8);
-  height: 238px;
+  height: 100%;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -1418,6 +1457,11 @@ const skipGuide = () => {
   position: relative;
 }
 
+/* 键盘弹出时，编辑区域固定高度，不伸展 */
+.edit-section.keyboard-open {
+  flex: none;
+}
+
 .edit-section::before {
   content: '';
   position: absolute;
@@ -1449,6 +1493,8 @@ const skipGuide = () => {
     rgba(240, 242, 245, 0.9) 100%
   );
   position: relative;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
 }
 
 .brand-hint::before {
@@ -1497,33 +1543,34 @@ const skipGuide = () => {
 
 /* 输入框容器 */
 .edit-container {
-  padding: 12px 16px;
-  padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  padding: 10px 16px;
+  padding-bottom: calc(10px + env(safe-area-inset-bottom));
   background-color: #FFFFFF;
+  height: auto;
   min-height: auto;
+  max-height: none;
   display: flex;
   flex-direction: column;
   border-top-left-radius: 24px;
   border-top-right-radius: 24px;
-  gap: 8px;
 }
 
 .edit-input-wrapper {
   width: 100%;
-  flex: 1;
-  min-height: 0;
+  position: relative;
 }
 
 .edit-input {
   width: 100%;
-  min-height: 56px;  /* 减小最小高度 */
-  max-height: 80px;  /* 减小最大高度 */
+  height: 130px;  /* 3行文字66px + 上下padding 24px + 工具栏预留40px */
+  min-height: 130px;
+  max-height: 130px;
   font-size: 15px;
   color: #666666;
   line-height: 22px;
   background-color: #F5F5F5;
-  border-radius: 12px;
-  padding: 8px 12px;
+  border-radius: 16px;
+  padding: 12px 12px 44px 12px;  /* 底部44px留给工具栏 */
   box-sizing: border-box;
   transition: all 0.2s ease;
 }
@@ -1531,37 +1578,49 @@ const skipGuide = () => {
 .edit-input.input-focused {
   color: #333333;
   background-color: #F8F9FA;
-  min-height: 56px;
-  max-height: 80px;
+}
+
+/* 悬浮工具栏 */
+.floating-toolbar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 8px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+}
+
+.toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .edit-toolbar {
-  background-color: transparent;
-  display: flex;
-  align-items: center;
-  height: 40px;
-  padding: 0 4px;
-  margin-top: 0;
-  transition: all 0.2s ease;
-  flex-shrink: 0;
+  display: none;
 }
 
 .toolbar-btn {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
+  font-size: 15px;
   color: #666666;
-  margin-right: 8px;
   border-radius: 8px;
-  background-color: #F0F0F0;
+  background-color: #E8E8E8;
   transition: all 0.15s ease;
 }
 
 .toolbar-btn:active {
-  background-color: #E0E0E0;
+  background-color: #D0D0D0;
   transform: scale(0.95);
 }
 
@@ -1573,12 +1632,20 @@ const skipGuide = () => {
   background-color: #4A90E2;
   color: #FFFFFF;
   font-size: 14px;
-  padding: 8px 20px;
+  padding: 6px 16px;
   border-radius: 8px;
   border: none;
   line-height: 1.4;
   font-weight: 500;
   transition: all 0.15s ease;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .save-btn:active {
